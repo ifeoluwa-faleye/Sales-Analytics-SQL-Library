@@ -45,3 +45,37 @@ SELECT
 	RANK() OVER(ORDER BY SUM(Sales) DESC) AS Sales_rank_by_customer
 FROM Sales.Orders
 GROUP BY CustomerID;
+
+--Find the total number of orders
+
+SELECT 
+	COUNT(*) Total_orders
+FROM Sales.Orders;
+
+/*Find the total number of orders
+Provide details such as order id and order date
+*/
+
+SELECT 
+	OrderID,
+	OrderDate,
+	COUNT(*) OVER() Total_orders
+FROM Sales.Orders;
+
+-- Find the total number of orders for each customer
+
+SELECT 
+	CustomerID,
+	COUNT(OrderID) OVER(PARTITION BY CustomerID) AS Sales_by_customer
+FROM Sales.Orders;
+
+/*Find the total number of customers
+Additionally, provide all customer's details
+*/
+
+SELECT
+	FirstName,
+	LastName,
+	Country,
+	COUNT(*) OVER() Total_number_of_customers
+FROM Sales.Customers;
