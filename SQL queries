@@ -79,3 +79,23 @@ SELECT
 	Country,
 	COUNT(*) OVER() Total_number_of_customers
 FROM Sales.Customers;
+
+--Find the total number of scores for customers
+
+SELECT
+	COUNT(Score) AS Customer_score_count
+FROM Sales.Customers;
+
+-- Check whether the table 'orders' contains any duplicate rows
+
+SELECT
+	OrderID,
+	COUNT(*) AS CheckPK
+FROM Sales.Orders
+GROUP BY OrderID;
+
+SELECT
+	OrderID,
+	COUNT(*) AS CheckPK
+FROM Sales.OrdersArchive
+GROUP BY OrderID;
