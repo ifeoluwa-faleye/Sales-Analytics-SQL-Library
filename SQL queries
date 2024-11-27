@@ -99,3 +99,29 @@ SELECT
 	COUNT(*) AS CheckPK
 FROM Sales.OrdersArchive
 GROUP BY OrderID;
+
+/*Find the total sales accross all orders
+and the total sales for each product
+Additionally, provide details such as order id and order date*/
+
+SELECT
+	OrderID,
+	OrderDate,
+	ProductID,
+	SUM(Sales) OVER(PARTITION BY ProductID) AS Sale_by_product,
+	SUM(Sales) OVER() AS Total_sales
+FROM Sales.Orders;
+
+--Find the percentage contribution of each product's sales to the total sales
+
+SELECT
+	*,
+	ROUND(CAST(Sales AS FLOAT)/Total_sales * 100.0, 0) AS Pecentage_of_total
+FROM
+(
+SELECT
+	ProductID,
+	Sales,
+	SUM(Sales) OVER() AS Total_sales
+FROM Sales.Orders
+)t
