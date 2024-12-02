@@ -125,3 +125,39 @@ SELECT
 	SUM(Sales) OVER() AS Total_sales
 FROM Sales.Orders
 )t
+/* Find the average sales across all orders
+and the average sales for each product.
+Additionally, provide details such as order id and order date.*/
+
+SELECT
+	OrderID,
+	OrderDate,
+	ProductID,
+	AVG(Sales) OVER() AS AvgSalesAllOrders,
+	AVG(Sales) OVER(PARTITION BY ProductID) AvgSalesByProduct
+FROM Sales.Orders;
+
+/* Find the average scores of customers.
+Additionally, provide details such as customer Id and Last Name.*/
+
+SELECT
+	CustomerID,
+	LastName,
+	Score,
+	AVG(Score) OVER() AS AvgScoresWithNull,
+	AVG(COALESCE(Score, 0)) OVER() AS AvgScores
+FROM Sales.Customers;
+
+/* Find all orders where the sales
+are higher than the average sales across all orders*/
+
+SELECT * 
+FROM
+(
+	SELECT 
+		OrderID,
+		Sales,
+		AVG(Sales) OVER() AvgSales
+	FROM Sales.Orders
+)t
+WHERE Sales > AvgSales;
