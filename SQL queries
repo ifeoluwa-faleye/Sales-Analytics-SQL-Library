@@ -203,3 +203,22 @@ SELECT
 	Sales - MIN(Sales) OVER() AS DevFromMin,
 	Sales - MAX(Sales) OVER() AS DevFromMax
 FROM Sales.Orders;
+
+--Calculate the moving average of sales for each product over time
+
+SELECT
+	OrderDate,
+	ProductID,
+	Sales,
+	AVG(Sales) OVER(PARTITION BY ProductID ORDER BY OrderDate) AS AvgSalesOverTime
+FROM Sales.Orders;
+
+--Calculate the moving average of sales for each product over time including only the next order.
+
+SELECT
+	OrderDate,
+	ProductID,
+	Sales,
+	AVG(Sales) OVER(PARTITION BY ProductID ORDER BY OrderDate) AS AvgSalesOverTime,
+	AVG(Sales) OVER(PARTITION BY ProductID ORDER BY OrderDate ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING) AS AvgSalesOverTime2
+FROM Sales.Orders;
