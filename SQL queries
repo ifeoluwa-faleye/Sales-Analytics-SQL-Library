@@ -222,3 +222,11 @@ SELECT
 	AVG(Sales) OVER(PARTITION BY ProductID ORDER BY OrderDate) AS AvgSalesOverTime,
 	AVG(Sales) OVER(PARTITION BY ProductID ORDER BY OrderDate ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING) AS AvgSalesOverTime2
 FROM Sales.Orders;
+
+--Rank the orders based on their sales from the highest to the lowest
+
+SELECT
+	OrderID,
+	Sales,
+	ROW_NUMBER() OVER(ORDER BY Sales DESC) SalesRank
+FROM Sales.Orders;
