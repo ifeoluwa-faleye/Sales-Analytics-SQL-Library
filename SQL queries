@@ -230,3 +230,53 @@ SELECT
 	Sales,
 	ROW_NUMBER() OVER(ORDER BY Sales DESC) SalesRank
 FROM Sales.Orders;
+
+--Rank the orders based on their sales from the highest to the lowest using the rank fuction
+
+SELECT
+	OrderID,
+	Sales,
+	RANK() OVER(ORDER BY Sales DESC) SalesRank
+FROM Sales.Orders;
+
+--Rank the orders based on their sales from the highest to the lowest using the dense rank fuction
+
+SELECT
+	OrderID,
+	Sales,
+	DENSE_RANK() OVER(ORDER BY Sales DESC) SalesRank
+FROM Sales.Orders;
+
+--Find the top highest sales for each products
+
+SELECT *
+FROM
+(
+	SELECT
+		OrderID,
+		ProductID,
+		Sales,
+		DENSE_RANK() OVER(PARTITION BY ProductID ORDER BY Sales DESC) RankbyProduct
+	FROM Sales.Orders
+)t
+WHERE RankbyProduct = 1;
+
+--Find the lowest 2 customers based on their total sales
+
+SELECT
+	*
+FROM
+(
+	SELECT
+		c.FirstName,
+		c.LastName,
+		c.CustomerID,
+		SUM(COALESCE(o.Sales, 0)) AS TotalSales,
+		RANK() OVER(ORDER BY SUM(COALESCE(o.Sales, 0))) AS TSalesRank
+	FROM Sales.Orders AS o
+		FULL JOIN Sales.Customers AS c
+			ON o.CustomerID = c.CustomerID
+	GROUP BY c.FirstName, c.LastName, c.CustomerID
+)t
+
+WHERE TSalesRank <=2;
