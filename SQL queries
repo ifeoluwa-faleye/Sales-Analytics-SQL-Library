@@ -231,7 +231,7 @@ SELECT
 	ROW_NUMBER() OVER(ORDER BY Sales DESC) SalesRank
 FROM Sales.Orders;
 
---Rank the orders based on their sales from the highest to the lowest using the rank fuction
+--Rank the orders based on their sales from the highest to the lowest using the rank function
 
 SELECT
 	OrderID,
@@ -239,7 +239,7 @@ SELECT
 	RANK() OVER(ORDER BY Sales DESC) SalesRank
 FROM Sales.Orders;
 
---Rank the orders based on their sales from the highest to the lowest using the dense rank fuction
+--Rank the orders based on their sales from the highest to the lowest using the dense rank function
 
 SELECT
 	OrderID,
@@ -247,7 +247,7 @@ SELECT
 	DENSE_RANK() OVER(ORDER BY Sales DESC) SalesRank
 FROM Sales.Orders;
 
---Find the top highest sales for each products
+--Find the top highest sales for each product
 
 SELECT *
 FROM
@@ -281,7 +281,7 @@ FROM
 
 WHERE TSalesRank <=2;
 
-/*Identify duplucate rows in the tabe 'Orders Archive'
+/*Identify duplicate rows in the table 'Orders Archive'
 and return a clean result without duplicates*/
 
 SELECT *
@@ -293,3 +293,21 @@ SELECT
 FROM Sales.OrdersArchive
 )t
 WHERE UniqueID = 1;
+
+--Segment all orders into 3 categories: high, medium, and low sales.
+
+SELECT
+	*,
+	CASE
+		WHEN SalesBucket = 1 THEN 'High Sales'
+		WHEN SalesBucket = 2 THEN 'Medium Sales'
+		WHEN SalesBucket = 3 THEN 'Low Sales'
+	END AS SalesCategory
+FROM
+(
+	SELECT
+		OrderID,
+		Sales,
+		NTILE(3) OVER(ORDER BY Sales DESC) AS SalesBucket
+	FROM Sales.Orders
+)t
