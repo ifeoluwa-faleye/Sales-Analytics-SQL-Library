@@ -280,3 +280,16 @@ FROM
 )t
 
 WHERE TSalesRank <=2;
+
+/*Identify duplucate rows in the tabe 'Orders Archive'
+and return a clean result without duplicates*/
+
+SELECT *
+FROM
+(
+SELECT 
+	ROW_NUMBER() OVER(PARTITION BY ProductID, CustomerID, OrderDate ORDER BY CreationTime DESC) AS UniqueID,
+	*
+FROM Sales.OrdersArchive
+)t
+WHERE UniqueID = 1;
