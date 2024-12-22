@@ -311,3 +311,17 @@ FROM
 		NTILE(3) OVER(ORDER BY Sales DESC) AS SalesBucket
 	FROM Sales.Orders
 )t
+-- Find the products that fall within the highest 40% of prices
+SELECT
+	Product,
+	Price,
+	PercentRank 
+FROM
+(
+SELECT 
+	Product,
+	Price,
+	CUME_DIST() OVER(ORDER BY Price DESC) * 100 AS PercentRank
+FROM Sales.Products
+)t
+WHERE PercentRank <= 40;
