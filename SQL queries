@@ -325,3 +325,16 @@ SELECT
 FROM Sales.Products
 )t
 WHERE PercentRank <= 40;
+--Analyze MoM performance
+SELECT
+	*,
+	COALESCE(ROUND(((CAST(TotalSales AS FLOAT) - PrevMonthSales)/PrevMonthSales) * 100,1), 0) AS MoMGrowth
+FROM
+(
+SELECT
+	MONTH(OrderDate) AS PMonth,
+	SUM(Sales) AS TotalSales,
+	LAG(SUM(Sales)) OVER(ORDER BY MONTH(OrderDate)) AS PrevMonthSales
+FROM Sales.Orders
+GROUP BY MONTH(OrderDate)
+)t
