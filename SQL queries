@@ -378,3 +378,14 @@ FROM
 			LEAD(OrderDate) OVER(PARTITION BY CustomerID ORDER BY OrderDate) AS NextOrderDate
 		FROM Sales.Orders
 )t)w
+
+--Find the lowest and highest sales for each product
+
+SELECT
+	ProductID,
+	Sales,
+	MAX(Sales) OVER(PARTITION BY ProductID) AS MaxSales,
+	MIN(Sales) OVER(PARTITION BY ProductID) AS MinSales,
+	FIRST_VALUE(Sales) OVER(PARTITION BY ProductID ORDER BY Sales DESC) AS MaxSalesF,
+	LAST_VALUE(Sales) OVER(PARTITION BY ProductID ORDER BY Sales DESC ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS MinSalesL
+FROM Sales.Orders;
