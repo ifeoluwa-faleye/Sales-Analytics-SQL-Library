@@ -338,3 +338,23 @@ SELECT
 FROM Sales.Orders
 GROUP BY MONTH(OrderDate)
 )t
+
+--Analyze customer loyalty y ranking customers based on the average number of days between orders
+
+SELECT
+	*,
+	DENSE_RANK() OVER(ORDER BY AvgDaystoOrder) AS AvgDaysRank
+FROM
+(
+	SELECT
+		*,
+		DATEDIFF(day, OrderDate, NextOrderDate) AS DaysTillNextOrder,
+		AVG(DATEDIFF(day, OrderDate, NextOrderDate)) OVER(PARTITION BY CustomerID) AS AvgDaystoOrder
+	FROM
+	(
+		SELECT
+			CustomerID,
+			OrderDate,
+			LEAD(OrderDate) OVER(PARTITION BY CustomerID ORDER BY OrderDate) AS NextOrderDate
+		FROM Sales.Orders
+)t)w
