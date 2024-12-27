@@ -424,3 +424,35 @@ SELECT
 	FirstName,
 	LastName
 FROM Sales.Customers;
+
+--Orders are stored in separate tables(Orders and OrderArchive). Combine all orders into one report without duplicates.
+
+SELECT
+	[OrderID]
+      ,[ProductID]
+      ,[CustomerID]
+      ,[SalesPersonID]
+      ,[OrderDate]
+      ,[ShipDate]
+      ,[OrderStatus]
+      ,[ShipAddress]
+      ,[BillAddress]
+      ,[Quantity]
+      ,[Sales]
+      ,[CreationTime]
+FROM Sales.Orders
+	UNION
+SELECT
+	[OrderID]
+      ,[ProductID]
+      ,[CustomerID]
+      ,[SalesPersonID]
+      ,[OrderDate]
+      ,[ShipDate]
+      ,[OrderStatus]
+      ,[ShipAddress]
+      ,[BillAddress]
+      ,[Quantity]
+      ,[Sales]
+      ,[CreationTime]
+FROM Sales.OrdersArchive;
