@@ -473,3 +473,27 @@ SELECT
 	END AS SalesBucket
 FROM Sales.Orders
 ORDER BY Sales;
+
+/* Generate a report showing the total sales for each category:
+	-High: If the sales are higher than 50
+	-Medium: If the sales are between 20 and 50
+	-Low: If the sales are equal to or lower than 20
+Sort the result from lowest to highest. */
+
+SELECT
+	SalesBucket,
+	SUM(Sales) AS TotalSalesByBucket
+FROM
+(
+SELECT
+	ProductID,
+	Sales,
+	CASE	
+		WHEN Sales > 50 THEN 'High'
+		WHEN Sales >= 20 AND Sales < 50 THEN 'Medium'
+		ELSE 'Low'
+	END AS SalesBucket
+FROM Sales.Orders
+)t
+GROUP BY SalesBucket
+ORDER BY TotalSalesByBucket;
