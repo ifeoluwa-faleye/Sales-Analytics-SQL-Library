@@ -513,3 +513,14 @@ SELECT
 	AVG(COALESCE(Score,0)) OVER() AS AvgScore2
 
 FROM Sales.Customers;
+
+--Count how many times each customer has made an order with sales greater than 30
+
+SELECT
+	CustomerID,
+	SUM(CASE
+		WHEN Sales > 30 THEN 1 
+		ELSE 0
+	END) AS SalesBucketCount
+FROM Sales.Orders
+GROUP BY CustomerID;
