@@ -497,3 +497,19 @@ FROM Sales.Orders
 )t
 GROUP BY SalesBucket
 ORDER BY TotalSalesByBucket;
+
+--Find the average scores of customers and treat NULLS as 0
+--Additionally, provide details such as Customer ID and LastName
+
+SELECT
+	CustomerID,
+	LastName,
+	Score,
+	CASE 
+		WHEN Score IS NULL THEN 0
+		ELSE Score
+	END AS ScoreNoNull,
+	AVG(Score) OVER() AS AvgScore,
+	AVG(COALESCE(Score,0)) OVER() AS AvgScore2
+
+FROM Sales.Customers;
