@@ -524,3 +524,12 @@ SELECT
 	END) AS SalesBucketCount
 FROM Sales.Orders
 GROUP BY CustomerID;
+
+--Display the full names of customers in a single field by merging their first name and last names and add 10 bonus points for each customers
+
+SELECT
+	CustomerID,
+	CONCAT(ISNULL(FirstName,''),' ', ISNULL(LastName,'')) AS FullName,
+	ISNULL(Score,0) AS NewScore,
+	ISNULL(Score,0) + 10 AS UpgradedScore
+FROM Sales.Customers;
