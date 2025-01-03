@@ -533,3 +533,22 @@ SELECT
 	ISNULL(Score,0) AS NewScore,
 	ISNULL(Score,0) + 10 AS UpgradedScore
 FROM Sales.Customers;
+
+--How many orders were placed each year?
+
+SELECT
+	YEAR(OrderDate) AS YearOfOrder,
+	COUNT (DISTINCT(OrderID)) AS TotalOrders
+FROM Sales.Orders
+GROUP BY YEAR(OrderDate);
+
+--How many orders were placed each month?
+
+SELECT
+	MONTH(OrderDate) AS MonthOfOrder,
+	DATENAME(month, OrderDate) AS MonthOfOrderN,
+	COUNT (DISTINCT(OrderID)) AS TotalOrders
+FROM Sales.Orders
+GROUP BY MONTH(OrderDate),
+	DATENAME(month, OrderDate)
+ORDER BY MONTH(OrderDate);
