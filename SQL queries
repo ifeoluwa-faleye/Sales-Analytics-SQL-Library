@@ -577,3 +577,12 @@ SELECT
 	AVG(DATEDIFF(day, OrderDate, ShipDate)) AS AvgDeliveryDuration
 FROM Sales.Orders
 GROUP BY DATENAME(month, OrderDate);
+
+--Find the number of days between each order and the previous order.
+
+SELECT
+	OrderID,
+	OrderDate,
+	LAG(OrderDate) OVER(ORDER BY OrderDate) PrevOrderDate,
+	DATEDIFF(day, LAG(OrderDate) OVER(ORDER BY OrderDate), OrderDate) DaysBetweenOrders
+FROM Sales.Orders;
