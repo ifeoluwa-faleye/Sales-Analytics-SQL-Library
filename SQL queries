@@ -561,3 +561,12 @@ SELECT
 	'Day ' + FORMAT(CreationTime, 'ddd MMM') +
 	' Q'+ DATENAME(quarter, CreationTime)+ ' ' + FORMAT(CreationTime, 'yyyy hh:mm:ss tt') AS newtime
 FROM Sales.Orders;
+
+--Calculate the age of employees
+
+SELECT
+	EmployeeID,
+	FirstName +' '+ LastName AS FullName,
+	DATEDIFF(year, BirthDate, GETDATE()) AS Age
+	
+FROM Sales.Employees;
