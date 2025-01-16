@@ -586,3 +586,13 @@ SELECT
 	LAG(OrderDate) OVER(ORDER BY OrderDate) PrevOrderDate,
 	DATEDIFF(day, LAG(OrderDate) OVER(ORDER BY OrderDate), OrderDate) DaysBetweenOrders
 FROM Sales.Orders;
+
+--Find the products that have a price higher than the average price of all products
+
+SELECT
+[ProductID]
+      ,[Product]
+      ,[Category]
+      ,[Price]
+FROM Sales.Products 
+WHERE Price > (SELECT AVG(Price) FROM Sales.Products);
