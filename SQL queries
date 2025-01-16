@@ -596,3 +596,18 @@ SELECT
       ,[Price]
 FROM Sales.Products 
 WHERE Price > (SELECT AVG(Price) FROM Sales.Products);
+
+--Rank the customers based on their total amount of sales
+SELECT
+	*,
+	DENSE_RANK() OVER(ORDER BY TotalSales DESC) AS SalesRank
+FROM
+	(
+	SELECT
+		c.CustomerID,
+		SUM(o.Sales) AS TotalSales
+	FROM Sales.Customers AS c
+	LEFT JOIN Sales.Orders AS o
+	ON c.CustomerID = o.CustomerID
+	GROUP BY c.CustomerID
+	)t
