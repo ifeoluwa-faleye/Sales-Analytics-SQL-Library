@@ -631,3 +631,19 @@ SELECT
 	*
 FROM Sales.Orders
 WHERE CustomerID NOT IN (SELECT CustomerID FROM Sales.Customers WHERE Country = 'Germany')
+--Find the total Sales Per Customer using CTE
+WITH SalesTable AS
+(SELECT
+	CustomerID,
+	SUM(Sales) AS TotalSales
+FROM Sales.Orders
+GROUP BY CustomerID)
+
+SELECT
+	c.CustomerID,
+	c.FirstName,
+	c.LastName,
+	t.TotalSales
+FROM Sales.Customers AS c
+LEFT JOIN SalesTable AS t
+ON c.CustomerID = t.CustomerID;
