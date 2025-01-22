@@ -631,19 +631,33 @@ SELECT
 	*
 FROM Sales.Orders
 WHERE CustomerID NOT IN (SELECT CustomerID FROM Sales.Customers WHERE Country = 'Germany')
---Find the total Sales Per Customer using CTE
+
+--Step 1. Find the total Sales Per Customer using CTE
+--Step 2. Find the last order date for each customer
 WITH SalesTable AS
 (SELECT
 	CustomerID,
 	SUM(Sales) AS TotalSales
 FROM Sales.Orders
-GROUP BY CustomerID)
+GROUP BY CustomerID),
+
+OrdersTable AS
+(
+SELECT
+	CustomerID,
+	MAX(OrderDate) AS LastOrderDate
+FROM Sales.Orders
+GROUP BY CustomerID
+)
 
 SELECT
 	c.CustomerID,
 	c.FirstName,
 	c.LastName,
-	t.TotalSales
+	t.TotalSales,
+	o.LastOrderDate
 FROM Sales.Customers AS c
 LEFT JOIN SalesTable AS t
-ON c.CustomerID = t.CustomerID;
+ON c.CustomerID = t.CustomerID
+LEFT JOIN OrdersTable AS o
+ON c.CustomerID = o.CustomerID;
