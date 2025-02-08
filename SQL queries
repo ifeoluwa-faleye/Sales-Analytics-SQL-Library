@@ -661,3 +661,19 @@ LEFT JOIN SalesTable AS t
 ON c.CustomerID = t.CustomerID
 LEFT JOIN OrdersTable AS o
 ON c.CustomerID = o.CustomerID;
+
+--Generate a series of numbers between 1 to 20
+
+WITH Series AS 
+(
+SELECT
+	1 AS MyNum
+UNION ALL
+SELECT
+	MyNum + 1
+FROM Series
+WHERE MyNum <= 20
+)
+SELECT
+	*
+FROM Series;
