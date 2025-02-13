@@ -697,3 +697,27 @@ FROM Series;
 	LEFT JOIN Sales.Employees AS e
 	ON o.SalesPersonID = e.EmployeeID
 	)
+--Provide a view that combines details from orders, products, customers, and employees for EU Sales team
+--And excludes data related to the US
+
+CREATE VIEW Sales.V_Order_Details_EU AS
+(
+	SELECT
+		o.OrderID,
+		o.OrderDate,
+		p.Product,
+		p.Category,
+		COALESCE(c.FirstName,'') +' '+ COALESCE(c.LastName,'') AS CustomerName,
+		c.Country,
+		e.Department,
+		o.Sales,
+		o.Quantity
+	FROM Sales.Orders AS o
+	LEFT JOIN Sales.Products AS p
+	ON o.ProductID = p.ProductID
+	LEFT JOIN Sales.Customers AS c
+	ON o.CustomerID = c.CustomerID
+	LEFT JOIN Sales.Employees AS e
+	ON o.SalesPersonID = e.EmployeeID
+	WHERE c.Country != 'USA'
+	)
