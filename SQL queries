@@ -721,3 +721,10 @@ CREATE VIEW Sales.V_Order_Details_EU AS
 	ON o.SalesPersonID = e.EmployeeID
 	WHERE c.Country != 'USA'
 	)
+--Create new table for monthly orders
+SELECT
+	DATENAME(month, OrderDate) AS OrderMonth,
+	COUNT(OrderID) AS TotalOrders
+	INTO Sales.MonthlyOrders
+FROM Sales.Orders
+GROUP BY DATENAME(month, OrderDate)
