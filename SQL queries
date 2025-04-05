@@ -765,3 +765,14 @@ SELECT
 FROM 
 	Sales.Employees)t
 WHERE Salary = HighestSalary;
+
+--Find the deviation of each sales from the minimum and maximum sales 
+SELECT
+	OrderID,
+	ProductID,
+	Sales,
+	MAX(Sales) OVER() AS HighestSales,
+	Sales - MAX(Sales) OVER() AS DevFromMax,
+	MIN(Sales) OVER() AS LowestSales,
+	Sales - MIN(Sales) OVER() AS DevFromMin
+FROM Sales.Orders;
