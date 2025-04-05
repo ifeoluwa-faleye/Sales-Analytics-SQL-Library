@@ -738,3 +738,30 @@ SELECT
 INTO Sales.MonthlyOrders
 FROM Sales.Orders
 GROUP BY DATENAME(month, OrderDate)
+
+--Find the highest and lowest sales across all orders
+--and the highest and the lowest sales for each product
+--Additionally, provide details such as order ID and order date.
+
+SELECT
+	OrderID,
+	ProductID,
+	Sales,
+	MAX(Sales) OVER() AS HighestSales,
+	MIN(Sales) OVER() AS LowestSales,
+	MAX(Sales) OVER(PARTITION BY ProductID) AS HighestSalesProduct,
+	MIN(Sales) OVER(PARTITION BY ProductID) AS LowestSalesProduct
+FROM Sales.Orders;
+
+--Show the employees who has the highest salaries
+SELECT
+	*
+FROM
+(
+SELECT
+	EmployeeID,
+	Salary,
+	MAX(Salary) OVER() AS HighestSalary
+FROM 
+	Sales.Employees)t
+WHERE Salary = HighestSalary;
