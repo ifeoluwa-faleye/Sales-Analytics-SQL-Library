@@ -776,3 +776,11 @@ SELECT
 	MIN(Sales) OVER() AS LowestSales,
 	Sales - MIN(Sales) OVER() AS DevFromMin
 FROM Sales.Orders;
+
+--Calculate the moving average of sales for each period over time
+
+SELECT
+	OrderDate,
+	Sales,
+	AVG(Sales) OVER(ORDER BY OrderDate) AS MASales
+FROM Sales.Orders
