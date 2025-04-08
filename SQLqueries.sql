@@ -794,3 +794,11 @@ SELECT
 	ROW_NUMBER() OVER(ORDER BY Sales DESC) AS RowNumberRank,
 	DENSE_RANK() OVER(ORDER BY Sales DESC) AS DenseRank
 FROM Sales.Orders
+
+--Find the top n highest sales for each product
+
+SELECT
+	ProductID,
+	Sales,
+	ROW_NUMBER() OVER(PARTITION BY ProductID ORDER BY Sales DESC) AS TopSales
+FROM Sales.Orders
