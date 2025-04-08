@@ -784,3 +784,13 @@ SELECT
 	Sales,
 	AVG(Sales) OVER(ORDER BY OrderDate) AS MASales
 FROM Sales.Orders
+
+--Rank the orders based on their sales from the highest to the lowest
+
+SELECT
+	OrderID,
+	Sales,
+	RANK() OVER(ORDER BY Sales DESC) AS OrdersRank,
+	ROW_NUMBER() OVER(ORDER BY Sales DESC) AS RowNumberRank,
+	DENSE_RANK() OVER(ORDER BY Sales DESC) AS DenseRank
+FROM Sales.Orders
