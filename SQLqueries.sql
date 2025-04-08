@@ -816,3 +816,10 @@ FROM
 		Sales.Orders
 	GROUP BY CustomerID)t
 WHERE SalesRankAsc <= 2;
+
+--Assign unique IDs for the rows of the 'Orders Archive' Table
+
+SELECT
+	ROW_NUMBER() OVER(ORDER BY OrderDate) UniqueID,
+	*
+FROM Sales.OrdersArchive;
