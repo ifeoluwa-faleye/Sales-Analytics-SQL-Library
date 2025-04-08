@@ -810,8 +810,9 @@ FROM
 (
 	SELECT
 		CustomerID,
-		Sales,
-		ROW_NUMBER() OVER(ORDER BY Sales) AS SalesRankAsc
+		SUM(Sales) AS TotalSales,
+		ROW_NUMBER() OVER(ORDER BY SUM(Sales)) AS SalesRankAsc
 	FROM 
-		Sales.Orders)t
+		Sales.Orders
+	GROUP BY CustomerID)t
 WHERE SalesRankAsc <= 2;
