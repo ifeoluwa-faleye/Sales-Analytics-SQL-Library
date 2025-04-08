@@ -802,3 +802,16 @@ SELECT
 	Sales,
 	ROW_NUMBER() OVER(PARTITION BY ProductID ORDER BY Sales DESC) AS TopSales
 FROM Sales.Orders
+
+--Find the lowest 2 customers based on their total sales
+SELECT
+	*
+FROM
+(
+	SELECT
+		CustomerID,
+		Sales,
+		ROW_NUMBER() OVER(ORDER BY Sales) AS SalesRankAsc
+	FROM 
+		Sales.Orders)t
+WHERE SalesRankAsc <= 2;
