@@ -823,3 +823,14 @@ SELECT
 	ROW_NUMBER() OVER(ORDER BY OrderDate) UniqueID,
 	*
 FROM Sales.OrdersArchive;
+--Identify duplicate rows in the table 'Orders Archive'
+-- and return a clean result without duplicate
+SELECT
+*
+	FROM
+	(
+	SELECT
+		ROW_NUMBER() OVER(PARTITION BY OrderID ORDER BY CreationTime DESC) UniqueID,
+		*
+FROM Sales.OrdersArchive)t
+WHERE UniqueID = 1;
