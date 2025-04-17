@@ -834,3 +834,9 @@ SELECT
 		*
 FROM Sales.OrdersArchive)t
 WHERE UniqueID = 1;
+
+-- In order to export the data, divide the orders into 2 groups.
+SELECT 
+	*,
+	NTILE(2) OVER(ORDER BY CreationTime) AS TwoBucket
+FROM Sales.Orders
