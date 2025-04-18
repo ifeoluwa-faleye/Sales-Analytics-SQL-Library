@@ -857,3 +857,34 @@ SELECT
 	LAG(s.TotalSales) OVER(ORDER BY ReportMonth) AS PrevSales,
 	ROUND(((CAST(s.TotalSales AS FLOAT)/LAG(s.TotalSales) OVER(ORDER BY ReportMonth))-1) * 100,1) AS PercGroth
 FROM SalesTable AS s
+
+--In order to analyze customer loyalty,
+--rank customers based on the average days between their orders
+
+SELECT
+	CustomerID,
+	OrderDate,
+	FIRST_VALUE(OrderDate) OVER(PARTITION BY CustomerID ORDER BY OrderDate) FirstOrder,
+	FIRST_VALUE(OrderDate) OVER(PARTITION BY CustomerID ORDER BY OrderDate DESC) LastOrder,
+	DATEDIFF(day, FIRST_VALUE(OrderDate) OVER(PARTITION BY CustomerID ORDER BY OrderDate), FIRST_VALUE(OrderDate) OVER(PARTITION BY CustomerID ORDER BY OrderDate DESC)) AS Bdate
+FROM Sales.Orders
+
+--In order to analyze customer loyalty,
+--rank customers based on the average days between their orders
+SELECT
+	*,
+	DENSE_RANK() OVER(ORDER BY AvgDaysBTOrders) DaysRank
+FROM(
+SELECT
+		*,
+		AVG(COALESCE(DaysBTOrders,0)) OVER(PARTITION BY CustomerID) AS AvgDaysBTOrders
+	FROM
+	(
+		SELECT
+			CustomerID,
+			OrderDate,
+			LEAD(OrderDate) OVER(PARTITION BY CustomerID ORDER BY OrderDate) PrevOrder,
+			DATEDIFF(day, OrderDate, LEAD(OrderDate) OVER(PARTITION BY CustomerID ORDER BY OrderDate)) AS DaysBTOrders
+		FROM Sales.Orders
+)t
+)tt
