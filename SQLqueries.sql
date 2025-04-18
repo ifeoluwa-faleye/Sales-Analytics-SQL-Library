@@ -840,3 +840,20 @@ SELECT
 	*,
 	NTILE(2) OVER(ORDER BY CreationTime) AS TwoBucket
 FROM Sales.Orders
+
+--Analyze the mom performance by finding the percentage change in sales between the current month and the previous month
+
+WITH SalesTable AS
+(SELECT
+	MONTH(OrderDate) AS ReportMonth,
+	SUM(Sales) AS TotalSales
+FROM 
+	Sales.Orders
+GROUP BY MONTH(OrderDate)
+)
+
+SELECT
+	*,
+	LAG(s.TotalSales) OVER(ORDER BY ReportMonth) AS PrevSales,
+	ROUND(((CAST(s.TotalSales AS FLOAT)/LAG(s.TotalSales) OVER(ORDER BY ReportMonth))-1) * 100,1) AS PercGroth
+FROM SalesTable AS s
