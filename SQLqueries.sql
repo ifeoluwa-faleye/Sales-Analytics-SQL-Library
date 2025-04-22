@@ -888,3 +888,13 @@ SELECT
 		FROM Sales.Orders
 )t
 )tt
+
+--Find all the customers who haven't placed any orders
+
+SELECT
+	c.*,
+	o.*
+FROM Sales.Customers AS c
+LEFT JOIN Sales.Orders AS o
+ON c.CustomerID = o.CustomerID
+WHERE o.CustomerID IS NULL;
