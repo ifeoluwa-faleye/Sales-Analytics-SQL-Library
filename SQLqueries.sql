@@ -898,3 +898,33 @@ FROM Sales.Customers AS c
 LEFT JOIN Sales.Orders AS o
 ON c.CustomerID = o.CustomerID
 WHERE o.CustomerID IS NULL;
+
+/*Using SalesDB, retrieve a list of all orders, along with the related customer, product, and employee details
+and for each order, display OrderID, Customer's name, Product Name, Sales Amount, Product Price, Salesperson's Name */
+
+SELECT
+	*
+FROM Sales.Orders;
+
+SELECT
+	*
+FROM Sales.Customers;
+
+SELECT
+	*
+FROM Sales.Employees;
+
+SELECT
+	o.OrderID,
+	COALESCE(c.FirstName, '') +' '+ COALESCE(c.LastName, '') AS CustomersName,
+	p.Product,
+	o.Sales,
+	p.Price,
+	COALESCE(e.FirstName, '') +' '+ COALESCE(e.LastName, '') AS SalesPersonsName
+FROM Sales.Orders AS o
+LEFT JOIN Sales.Customers AS c
+ON o.CustomerID = c.CustomerID
+LEFT JOIN Sales.Employees AS e
+ON o.SalesPersonID = e.EmployeeID
+LEFT JOIN Sales.Products AS p
+ON o.ProductID = p.ProductID;
