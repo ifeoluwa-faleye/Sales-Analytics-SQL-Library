@@ -928,3 +928,15 @@ LEFT JOIN Sales.Employees AS e
 ON o.SalesPersonID = e.EmployeeID
 LEFT JOIN Sales.Products AS p
 ON o.ProductID = p.ProductID;
+--Show all customer details and find the total orders for each customers
+SELECT *
+FROM Sales.Orders;
+
+SELECT c.FirstName,
+c.LastName,
+COUNT(o.OrderID) AS TotalOrders
+FROM Sales.Customers AS c
+LEFT JOIN Sales.Orders AS o
+ON c.CustomerID = o.CustomerID
+GROUP BY c.FirstName,
+c.LastName;
