@@ -949,10 +949,22 @@ SELECT
 	SUM(Sales) AS totalsales
 FROM Sales.Orders
 GROUP BY CustomerID
+),
+--Find the last order date for each customer
+CTE_LastOrderDate AS
+(
+SELECT
+	CustomerID,
+	MAX(OrderDate) AS LastOrderDate
+FROM Sales.Orders
+GROUP BY CustomerID
 )
 --Main Query
 SELECT c.*,
-	t.totalsales
+	t.totalsales,
+	l.LastOrderDate
 FROM Sales.Customers AS c
 LEFT JOIN CTE_TotalSales AS t
-ON c.CustomerID = t.CustomerID;
+ON c.CustomerID = t.CustomerID
+LEFT JOIN CTE_LastOrderDate l
+ON c.CustomerID = l.CustomerID;
