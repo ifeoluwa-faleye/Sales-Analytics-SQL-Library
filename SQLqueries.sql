@@ -940,3 +940,19 @@ LEFT JOIN Sales.Orders AS o
 ON c.CustomerID = o.CustomerID
 GROUP BY c.FirstName,
 c.LastName;
+
+--Find the total sales per customer 
+WITH CTE_TotalSales AS
+(
+SELECT
+	CustomerID,
+	SUM(Sales) AS totalsales
+FROM Sales.Orders
+GROUP BY CustomerID
+)
+--Main Query
+SELECT c.*,
+	t.totalsales
+FROM Sales.Customers AS c
+LEFT JOIN CTE_TotalSales AS t
+ON c.CustomerID = t.CustomerID;
