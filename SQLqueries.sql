@@ -968,3 +968,18 @@ LEFT JOIN CTE_TotalSales AS t
 ON c.CustomerID = t.CustomerID
 LEFT JOIN CTE_LastOrderDate l
 ON c.CustomerID = l.CustomerID;
+
+-- ----------------------------------------------------------
+-- Rank the customers based on the total sales per customers
+-- ----------------------------------------------------------
+WITH CustomerTable AS
+(
+SELECT
+	CustomerID,
+	SUM(Sales) TotalSales
+FROM Sales.Orders
+GROUP BY CustomerID
+)
+SELECT *,
+RANK() OVER(ORDER BY TotalSales DESC) AS TopCustomers
+FROM CustomerTable;
