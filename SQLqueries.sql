@@ -983,3 +983,23 @@ GROUP BY CustomerID
 SELECT *,
 RANK() OVER(ORDER BY TotalSales DESC) AS TopCustomers
 FROM CustomerTable;
+
+-- ----------------------------------------------------
+-- Generate a sequence of numbers from 1 to 20
+-- ----------------------------------------------------
+WITH Series AS(
+-- Anchor Query
+SELECT 
+	1 AS ID
+UNION ALL
+--Recurssion
+SELECT
+	ID + 1
+FROM Series
+WHERE ID <= 19
+)
+
+-- Main Query
+SELECT 
+	*
+FROM Series
