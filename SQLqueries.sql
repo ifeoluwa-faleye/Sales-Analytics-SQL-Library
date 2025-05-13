@@ -1003,3 +1003,20 @@ WHERE ID <= 19
 SELECT 
 	*
 FROM Series
+
+-- ----------------------------------------------
+-- Find the running total of sales for each month
+-- ----------------------------------------------
+
+SELECT 
+	DATENAME(month, OrderMonth),
+	SUM(TotalSales) OVER(ORDER BY OrderMonth)
+FROM
+(
+SELECT
+	DATETRUNC(month, OrderDate) OrderMonth,
+	SUM(Sales) TotalSales
+FROM 
+	Sales.Orders
+GROUP BY
+DATETRUNC(month, OrderDate))t
