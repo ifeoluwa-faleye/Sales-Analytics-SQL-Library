@@ -1020,3 +1020,32 @@ FROM
 	Sales.Orders
 GROUP BY
 DATETRUNC(month, OrderDate))t
+
+-- ------------------------------------------------------------------------------------
+-- Provide a view that combines details from orders, products, customers, and employees
+-- ------------------------------------------------------------------------------------
+IF OBJECT_ID('Sales.V_Enriched_Sales','V') IS NOT NULL
+	DROP VIEW Sales.V_Enriched_Sales
+GO
+CREATE VIEW V_Enriched_Sales AS
+(
+SELECT
+	o.OrderID,
+	p.ProductID,
+	p.Category,
+	p.Product,
+	c.CustomerID,
+	COALESCE(c.FirstName, '') + ' ' + COALESCE(c.LastName, '') AS CustomerName,
+	c.Country,
+	c.Score,
+	p.Price,
+	e.EmployeeID,
+	e.FirstName
+FROM Sales.Orders AS o
+FULL JOIN Sales.Products AS p
+ON o.ProductID = p.ProductID
+FULL JOIN Sales.Customers AS c
+ON o.CustomerID = c.CustomerID
+LEFT JOIN Sales.Employees AS e
+ON o.SalesPersonID = e.EmployeeID
+)
