@@ -1049,3 +1049,13 @@ ON o.CustomerID = c.CustomerID
 LEFT JOIN Sales.Employees AS e
 ON o.SalesPersonID = e.EmployeeID
 )
+
+-- Copy the data in Sales.Customers into a new table with no clusters
+SELECT *
+INTO Sales.DBCustomers
+FROM Sales.Customers
+
+-- Create a clustered index on Sales.DBCustomers table on the CustomerID
+
+CREATE CLUSTERED INDEX idx_DBCustomers_CustomerID 
+ON Sales.DBCustomers (CustomerID)
