@@ -1059,3 +1059,23 @@ FROM Sales.Customers
 
 CREATE CLUSTERED INDEX idx_DBCustomers_CustomerID 
 ON Sales.DBCustomers (CustomerID)
+
+-- ------------------------------------------
+-- Creating a stored procedure to be updated
+-- ------------------------------------------
+
+ALTER PROCEDURE newprod @Country NVARCHAR(50) = 'USA'
+AS
+BEGIN 
+	DECLARE @TotalOrder INT, @AvgScore FLOAT
+		SELECT
+			@TotalOrder = COUNT(CustomerID),
+			@AvgScore = AVG(Score)
+		FROM Sales.Customers
+		WHERE Country = @Country
+	PRINT('Total order in' +' '+ @Country + ' is ' + CAST(@TotalOrder AS NVARCHAR))
+	PRINT('Average Score in' +' '+ @Country + ' is ' + CAST(@AvgScore AS NVARCHAR))
+END
+
+-- Execue the Stored Procedure
+EXEC newprod @Country = 'USA' 
