@@ -1079,3 +1079,45 @@ END
 
 -- Execue the Stored Procedure
 EXEC newprod @Country = 'USA' 
+
+-- ------------------------------------------
+-- Creating a stored procedure to be updated
+-- ------------------------------------------
+
+ALTER PROCEDURE newprod @Country NVARCHAR(50) = 'USA'
+AS
+BEGIN 
+
+DECLARE @TotalOrder INT, @AvgScore FLOAT;
+
+-- Prepare the data and clean up
+	IF EXISTS (SELECT 1 FROM Sales.Customers WHERE Score IS NULL)
+		
+		BEGIN
+			UPDATE Sales.Customers
+			SET Score = 0
+			WHERE Score IS NULL AND Country = @Country;
+		PRINT('Score contains nulls for ' + @Country)
+		PRINT('>>> Updating nulls to 0')
+		END
+
+
+	ELSE
+		BEGIN
+			PRINT('No Nulls in Scores for ' + @Country)
+		END;
+
+		-- Generating Reports
+		PRINT('=================================================')
+		SELECT
+			@TotalOrder = COUNT(CustomerID),
+			@AvgScore = AVG(Score)
+		FROM Sales.Customers
+		WHERE Country = @Country
+		PRINT('Total order in' +' '+ @Country + ' is ' + CAST(@TotalOrder AS NVARCHAR))
+		PRINT('Average Score in' +' '+ @Country + ' is ' + CAST(@AvgScore AS NVARCHAR))
+		PRINT('=================================================')
+END
+
+-- Execue the Stored Procedure
+EXEC newprod @Country = 'Germany' 
