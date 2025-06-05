@@ -1121,3 +1121,80 @@ END
 
 -- Execue the Stored Procedure
 EXEC newprod @Country = 'Germany' 
+
+-- =========================================
+-- Turning the query into a stored procedure
+-- =========================================
+
+ALTER PROCEDURE GetCustomerSummary @Country NVARCHAR(30) = 'USA' AS 
+BEGIN
+	BEGIN TRY
+		DECLARE @TotalCustomers INT, @AvgScore FLOAT, @TotalOrders INT, @TotalSales INT;
+		-- =========================================
+		-- Step 1: Prepare and clean up data
+		-- =========================================
+			IF EXISTS (SELECT 1 FROM Sales.Customers WHERE Score IS NULL AND Country = @Country)
+			BEGIN
+				PRINT ('*************************************');
+				PRINT ('Null Value(s) found and updated to 0');
+				PRINT ('*************************************');
+				UPDATE Sales.Customers
+				SET Score = 0
+				WHERE Score IS NULL AND Country = @Country
+			END
+
+			ELSE
+
+			BEGIN
+				PRINT ('*************************************');
+				PRINT ('No Null Value(s) found');
+				PRINT ('*************************************');
+			END;
+
+		-- =========================================
+		-- Step 2: Generating report
+		-- =========================================
+			SELECT 
+				@TotalCustomers = COUNT(*),
+				@AvgScore = AVG(Score)
+			FROM Sales.Customers
+			WHERE Country = @Country;
+
+			PRINT 'Total customers from ' + @Country +':'+ CAST(@TotalCustomers AS NVARCHAR);
+			PRINT 'Average Score from ' + @Country + ':' + CAST(@AvgScore AS NVARCHAR);
+
+			PRINT ('**************************')
+			PRINT ('Generating second query')
+			PRINT ('**************************')
+		-- ===============================================
+		-- Find the total number of orders and total sales
+		-- ===============================================
+			SELECT 
+				@TotalOrders = COUNT(o.OrderID),
+				@TotalSales = SUM(o.Sales)
+			FROM Sales.Orders AS o
+			JOIN Sales.Customers AS c
+			ON o.CustomerID = c.CustomerID
+			WHERE COUNTRY = @Country;
+
+	
+			PRINT 'Total Orders from ' + @Country +':'+ CAST(@TotalOrders AS NVARCHAR);
+			PRINT 'Total Sales from ' + @Country + ':' + CAST(@TotalSales AS NVARCHAR);
+	END TRY
+	-- =========================================
+	-- Error handling
+	-- =========================================
+	BEGIN CATCH
+		PRINT('An error occured.');
+		PRINT('Error Message: ' + ERROR_MESSAGE());
+		PRINT('Error Number: ' + CAST(ERROR_NUMBER() AS NVARCHAR));
+		PRINT('Error Line: ' + CAST(ERROR_LINE() AS NVARCHAR));
+		PRINT('Error Procedure: ' + ERROR_PROCEDURE());
+	END CATCH
+END
+
+-- =========================================
+-- Execute the stored procedure
+-- =========================================
+
+EXEC GetCustomerSummary;
