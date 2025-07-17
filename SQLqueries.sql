@@ -1613,3 +1613,17 @@ SELECT
 		 ELSE TRIM(cntry)
 	END AS cntry
 FROM bronze.erp_loc_a101;
+
+--Transform bronze.erp_px_cat_g1v2 and load to Silver Layer
+INSERT INTO silver.erp_px_cat_g1v2(
+	id,
+	cat,
+	subcat,
+	maintenance
+)
+SELECT
+	id,
+	cat,
+	subcat,
+	maintenance
+FROM bronze.erp_px_cat_g1v2;
