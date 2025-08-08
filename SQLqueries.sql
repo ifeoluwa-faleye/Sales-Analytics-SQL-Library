@@ -1901,3 +1901,92 @@ LEFT JOIN silver.erp_cust_az12 AS ca
 	ON ci.cst_key = ca.cid
 LEFT JOIN silver.erp_loc_a101 AS la
 ON ci.cst_key = la.cid;
+-- Explore All Objects in the Database
+SELECT
+	*
+FROM INFORMATION_SCHEMA.TABLES;
+
+-- Explore All  Columns in the Database
+SELECT
+	*
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = 'dim_customers';
+
+-- Explore All the Dimensions in Our Customers Table
+SELECT 
+	DISTINCT country
+FROM gold.dim_customers;
+
+-- Explore All the Categories "The Major Divisions"
+SELECT 
+	category,
+	subcategory,
+	product_name
+FROM gold.dim_products;
+
+-- Explore the Dates-Find the dates of the first and last order
+SELECT
+	MIN(order_date)
+FROM gold.fact_sales;
+
+-- Explore the Dates-Find the dates of the first and last order
+SELECT
+	MAX(order_date)
+FROM gold.fact_sales;
+
+-- Explore the Dates-Find the dates of the first and last order
+SELECT
+	DATEDIFF(year, MIN(order_date), MAX(order_date))
+FROM gold.fact_sales;
+
+--Find the youngest and oldest customer
+
+SELECT 
+	MAX(birthdate) AS yougest_dob,
+	DATEDIFF(year, MAX(birthdate), GETDATE()) AS youngest_age,
+	MIN(birthdate) AS oldest_dob,
+	DATEDIFF(year, MIN(birthdate), GETDATE()) AS oldest_age
+FROM gold.dim_customers;
+
+-- Explore the Measures
+-- Find the total sales
+SELECT
+	'Total Sales' AS [Measure Name],
+	SUM(sales_amount) AS [Measure Value]
+FROM gold.fact_sales
+UNION
+-- Find how many items were sold
+SELECT
+	'Total Quantity' AS Measures,
+	SUM(quantity) AS [KPIs]
+FROM gold.fact_sales
+UNION
+-- Find the average selling price
+SELECT
+	'Average Price' AS Measures,
+	AVG(price) AS [KPIs]
+FROM gold.fact_sales
+UNION
+-- Find the total number of orders
+SELECT
+	'Total Orders' AS Measures,
+	COUNT(DISTINCT order_number) AS [KPIs]
+FROM gold.fact_sales
+UNION
+-- Find the total number of products
+SELECT
+	'Total Products' AS Measures,
+	COUNT(product_id) AS [KPIs]
+FROM gold.dim_products
+UNION
+-- Find the total number of customers
+SELECT
+	'Total Customers' AS Measures,
+	COUNT(customer_id) AS [KPIs]
+FROM gold.dim_customers
+UNION
+-- Find the total number of customers that has placed an order
+SELECT
+	'Total Customers With Orders' AS Measures,
+	COUNT(DISTINCT customer_key) AS [KPIs]
+FROM gold.fact_sales
