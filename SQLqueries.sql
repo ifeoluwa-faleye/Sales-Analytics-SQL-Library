@@ -2078,3 +2078,50 @@ LEFT JOIN gold.dim_products p
 ON s.product_key = p.product_key
 GROUP BY p.product_name)t
 WHERE p_rank <= 5
+-- Analyze sales performance over time
+SELECT
+	FORMAT(order_date, 'MMM, yyyy') AS order_date,
+	SUM(sales_amount) AS total_sales,
+	COUNT(DISTINCT customer_key) AS total_customers
+FROM gold.fact_sales
+WHERE order_date IS NOT NULL
+GROUP BY FORMAT(order_date, 'MMM, yyyy');
+
+-- Analyze cummulative sales performance over time
+SELECT 
+	order_year,
+	order_date,
+	total_sales,
+	SUM(total_sales) OVER(ORDER BY order_year, order_date) AS cumulative_sales,
+	SUM(total_customers) OVER(ORDER BY order_year, order_date) AS cumulative_customers
+FROM
+(
+SELECT
+	YEAR(order_date) AS order_year,
+	MONTH(order_date) AS order_date,
+	SUM(sales_amount) AS total_sales,
+	COUNT(DISTINCT customer_key) AS total_customers
+FROM gold.fact_sales
+WHERE order_date IS NOT NULL
+GROUP BY YEAR(order_date), MONTH(order_date))t
+
+-- Analyze cummulative sales performance over time
+SELECT 
+	order_year,
+	order_date,
+	total_sales,
+	average_price,
+	SUM(total_sales) OVER(PARTITION BY order_year ORDER BY order_year, order_date) AS cumulative_sales,
+	SUM(total_customers) OVER(PARTITION BY order_year ORDER BY order_year, order_date) AS cumulative_customers,
+	AVG(average_price) OVER(PARTITION BY order_year ORDER BY order_year, order_date ROWS BETWEEN 2 PRECEDING AND CURRENT ROW) AS MMA
+FROM
+(
+SELECT
+	YEAR(order_date) AS order_year,
+	MONTH(order_date) AS order_date,
+	SUM(sales_amount) AS total_sales,
+	COUNT(DISTINCT customer_key) AS total_customers,
+	AVG(price) AS average_price
+FROM gold.fact_sales
+WHERE order_date IS NOT NULL
+GROUP BY YEAR(order_date), MONTH(order_date))t
