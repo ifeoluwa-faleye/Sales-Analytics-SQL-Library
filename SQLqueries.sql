@@ -2056,3 +2056,25 @@ FROM gold.dim_customers AS cu
 LEFT JOIN gold.fact_sales AS sa
 ON cu.customer_key = sa.customer_key
 GROUP BY country;
+-- Which 5 products generates the highest revenue
+SELECT TOP 5
+p.product_name,
+SUM(s.sales_amount) AS Total_Revenue
+FROM gold.fact_sales s
+LEFT JOIN gold.dim_products p
+ON s.product_key = p.product_key
+GROUP BY p.product_name
+ORDER BY Total_Revenue DESC;
+
+-- Which 5 products generates the highest revenue
+SELECT *
+FROM(
+SELECT
+p.product_name,
+SUM(s.sales_amount) AS Total_Revenue,
+RANK() OVER(ORDER BY SUM(s.sales_amount) DESC) AS p_rank
+FROM gold.fact_sales s
+LEFT JOIN gold.dim_products p
+ON s.product_key = p.product_key
+GROUP BY p.product_name)t
+WHERE p_rank <= 5
