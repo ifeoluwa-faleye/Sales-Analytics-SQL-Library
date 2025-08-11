@@ -2125,3 +2125,27 @@ SELECT
 FROM gold.fact_sales
 WHERE order_date IS NOT NULL
 GROUP BY YEAR(order_date), MONTH(order_date))t
+/*Analyze the yearly performance of products
+by comparing each product's sales to both its 
+average sales performance and the previous year's sales
+*/
+
+SELECT 
+	*,
+	AVG(total_sales) OVER(PARTITION BY product_name) AS avgsales,
+	LAG(total_sales) OVER(PARTITION BY product_name ORDER BY order_year) AS py_sales,
+	total_sales - AVG(total_sales) OVER(PARTITION BY product_name) AS salesminusavg,
+	FORMAT((total_sales - CAST(AVG(total_sales) OVER(PARTITION BY product_name) AS FLOAT))/CAST(AVG(total_sales) OVER(PARTITION BY product_name) AS FLOAT), 'P') AS salesvsavg,
+	FORMAT((CAST(total_sales AS FLOAT) - LAG(total_sales) OVER(PARTITION BY product_name ORDER BY order_year))
+	/LAG(total_sales) OVER(PARTITION BY product_name ORDER BY order_year), 'P') AS yoygrowth
+FROM
+(SELECT
+	p.product_name,
+	YEAR(s.order_date) AS order_year,
+	SUM(s.sales_amount) AS total_sales,
+	AVG(s.sales_amount) AS avg_sales
+FROM gold.fact_sales AS s
+LEFT JOIN gold.dim_products AS p
+	ON s.product_key = p.product_key
+WHERE order_date IS NOT NULL
+GROUP BY p.product_name, YEAR(s.order_date))t
