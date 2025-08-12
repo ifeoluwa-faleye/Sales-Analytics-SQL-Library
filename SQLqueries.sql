@@ -2198,3 +2198,80 @@ GROUP BY CASE
 		WHEN total_price >= 100 AND total_price < 500 THEN 'Medium Cost'
 		ELSE 'High Cost'
 	END
+-- Group customers into three segments based on their spending behaviour
+WITH customer AS (
+SELECT
+	customer_key,
+	SUM(sales_amount) AS customer_spending,
+	CASE WHEN SUM(sales_amount) < 5000 THEN '< 5,000'
+		 WHEN SUM(sales_amount) BETWEEN 5000 AND 10000 THEN '5,000 - 10,000'
+		 ELSE '> 10,000'
+	END AS customer_spend
+FROM gold.fact_sales
+GROUP BY customer_key)
+
+SELECT
+	customer_spend,
+	COUNT(DISTINCT customer_key) AS customer_count
+FROM customer
+GROUP BY customer_spend
+ORDER BY COUNT(DISTINCT customer_key)
+
+-- Group customers into three segments based on their spending behaviour
+WITH customer AS (
+SELECT
+	customer_key,
+	sales_amount,
+	order_date,
+	FIRST_VALUE(order_date) OVER (PARTITION BY customer_key ORDER BY order_date) AS first_order,
+	FIRST_VALUE(order_date) OVER (PARTITION BY customer_key ORDER BY order_date DESC) AS last_order,
+	DATEDIFF(month, FIRST_VALUE(order_date) OVER (PARTITION BY customer_key ORDER BY order_date), FIRST_VALUE(order_date) OVER (PARTITION BY customer_key ORDER BY order_date DESC)) AS history
+FROM gold.fact_sales
+WHERE order_date IS NOT NULL)
+, customer_seg AS(
+SELECT
+	customer_key,
+	SUM(sales_amount) AS customer_spend,
+	history,
+	CASE
+		WHEN SUM(sales_amount) > 5000 AND history >= 12 THEN 'VIP'
+		WHEN SUM(sales_amount) <= 5000 AND history >= 12 THEN 'Regular'
+		ELSE 'New'
+	END AS customer_category
+FROM customer
+GROUP BY customer_key, history)
+
+SELECT 
+	customer_category,
+	COUNT(DISTINCT customer_key) total_customers
+FROM customer_seg
+GROUP BY customer_category;
+
+-- Group customers into three segments based on their spending behaviour
+WITH customer AS (
+SELECT
+	customer_key,
+	sales_amount,
+	order_date,
+	FIRST_VALUE(order_date) OVER (PARTITION BY customer_key ORDER BY order_date) AS first_order,
+	FIRST_VALUE(order_date) OVER (PARTITION BY customer_key ORDER BY order_date DESC) AS last_order,
+	DATEDIFF(month, FIRST_VALUE(order_date) OVER (PARTITION BY customer_key ORDER BY order_date), FIRST_VALUE(order_date) OVER (PARTITION BY customer_key ORDER BY order_date DESC)) AS history
+FROM gold.fact_sales)
+, customer_seg AS(
+SELECT
+	customer_key,
+	SUM(sales_amount) AS customer_spend,
+	history,
+	CASE
+		WHEN SUM(sales_amount) > 5000 AND history >= 12 THEN 'VIP'
+		WHEN SUM(sales_amount) <= 5000 AND history >= 12 THEN 'Regular'
+		ELSE 'New'
+	END AS customer_category
+FROM customer
+GROUP BY customer_key, history)
+
+SELECT 
+	customer_category,
+	COUNT(DISTINCT customer_key) total_customers
+FROM customer_seg
+GROUP BY customer_category;
