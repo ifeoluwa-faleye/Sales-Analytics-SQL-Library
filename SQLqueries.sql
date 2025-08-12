@@ -2149,3 +2149,31 @@ LEFT JOIN gold.dim_products AS p
 	ON s.product_key = p.product_key
 WHERE order_date IS NOT NULL
 GROUP BY p.product_name, YEAR(s.order_date))t
+-- Which category contributes the most to the overall sales?
+WITH category AS
+(SELECT
+	p.category,
+	SUM(s.sales_amount) AS total_sales
+FROM gold.fact_sales AS s
+LEFT JOIN gold.dim_products AS p
+	ON s.product_key = p.product_key
+GROUP BY p.category)
+
+SELECT 
+*,
+SUM(total_sales) OVER() AS g_total_sales,
+FORMAT(CAST(total_sales AS FLOAT)/SUM(total_sales) OVER(), 'P') AS p_total
+FROM category
+
+--Method 2
+
+SELECT SUM(sales_amount) FROM gold.fact_sales
+
+SELECT
+	p.category,
+	SUM(s.sales_amount) AS total_sales,
+	FORMAT(CAST(SUM(s.sales_amount) AS FLOAT)/ (SELECT SUM(sales_amount) FROM gold.fact_sales), 'P') AS p_total
+FROM gold.fact_sales AS s
+LEFT JOIN gold.dim_products AS p
+	ON s.product_key = p.product_key
+GROUP BY p.category
