@@ -2177,3 +2177,24 @@ FROM gold.fact_sales AS s
 LEFT JOIN gold.dim_products AS p
 	ON s.product_key = p.product_key
 GROUP BY p.category
+-- Segment products into cost ranges and count how many products fall into each segment
+WITH product_table AS(
+SELECT
+	product_key,
+	SUM(cost) AS total_price
+FROM gold.dim_products
+GROUP BY product_key)
+
+SELECT 
+	CASE 
+		WHEN total_price < 100 THEN 'Low Cost'
+		WHEN total_price >= 100 AND total_price < 500 THEN 'Medium Cost'
+		ELSE 'High Cost'
+	END AS price_cat,
+	COUNT( DISTINCT product_key) product_count
+FROM product_table
+GROUP BY CASE 
+		WHEN total_price < 100 THEN 'Low Cost'
+		WHEN total_price >= 100 AND total_price < 500 THEN 'Medium Cost'
+		ELSE 'High Cost'
+	END
