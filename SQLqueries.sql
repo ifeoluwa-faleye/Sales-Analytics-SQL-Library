@@ -2296,7 +2296,7 @@ Highlights:
 		- average monthly spend
 ================================================================================
 */
-
+CREATE VIEW gold.report_customers AS
 WITH base_query AS
 /*------------------------------------------------------------------------------
 1) Base Query: Retrieves core columns from tables
@@ -2358,7 +2358,14 @@ SELECT
 	total_sales,
 	total_quantity,
 	lifespan,
-	last_order_date
+	last_order_date,
+	DATEDIFF(month, last_order_date, GETDATE()) AS recency,
+	CASE WHEN total_orders = 0 THEN 0
+		 ELSE total_sales/total_orders 
+	END AS avg_order_value,
+	CASE WHEN lifespan = 0 THEN total_sales
+		 ELSE total_sales/lifespan 
+	END AS avg_monthly_spend
 FROM customer_aggregation
 GROUP BY 
 	customer_key,
