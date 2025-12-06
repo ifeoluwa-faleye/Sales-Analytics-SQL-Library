@@ -41,3 +41,19 @@ FROM SalesDB.Sales.Customers AS c
 FULL JOIN SalesDB.Sales.Orders AS o
 	ON c.CustomerID = o.CustomerID
 WHERE c.CustomerID IS NULL OR o.CustomerID IS NULL
+/*
+Find all customers along with their orders but only for customers with orders without using inner join
+*/
+SELECT
+*
+FROM SalesDB.Sales.Customers AS c
+FULL JOIN SalesDB.Sales.Orders AS o
+	ON c.CustomerID = o.CustomerID
+WHERE NOT c.CustomerID IS NULL AND NOT o.CustomerID IS NULL;
+
+--Using inner join
+SELECT
+*
+FROM SalesDB.Sales.Customers AS c
+JOIN SalesDB.Sales.Orders AS o
+	ON c.CustomerID = o.CustomerID;
