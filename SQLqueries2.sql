@@ -31,3 +31,13 @@ SELECT *
 FROM SalesDB.Sales.Customers AS c
 LEFT JOIN SalesDB.Sales.Orders AS o
 ON c.CustomerID = o.CustomerID;
+
+/*
+Find orders with no customers and customers with no orders
+*/
+SELECT
+*
+FROM SalesDB.Sales.Customers AS c
+FULL JOIN SalesDB.Sales.Orders AS o
+	ON c.CustomerID = o.CustomerID
+WHERE c.CustomerID IS NULL OR o.CustomerID IS NULL
