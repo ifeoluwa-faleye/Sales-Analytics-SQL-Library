@@ -57,3 +57,29 @@ SELECT
 FROM SalesDB.Sales.Customers AS c
 JOIN SalesDB.Sales.Orders AS o
 	ON c.CustomerID = o.CustomerID;
+/*
+Using SalesDB, Retrieve a list of all orders, along with the related customer, product, and employee details.
+Fro each order, display:
+- OrderID
+- Customer's name
+- Product name
+- Sales amount
+- Product price
+- Salesperson's name
+*/
+
+SELECT
+	o.OrderID,
+	COALESCE(c.FirstName,'')+ ' ' +  COALESCE(c.LastName,'') AS CustomerName,
+	p.Product,
+	o.Sales,
+	o.quantity,
+	p.Price,
+	COALESCE(e.FirstName,'')+ ' ' +  COALESCE(e.LastName,'') AS EmployeeName
+FROM SalesDB.Sales.Orders AS o
+JOIN SalesDB.Sales.Customers AS c
+ON o.CustomerID = c.CustomerID
+JOIN SalesDB.Sales.Products AS p
+ON o.ProductID = p.ProductID
+JOIN SalesDB.Sales.Employees AS e
+ON o.SalesPersonID = e.EmployeeID;
