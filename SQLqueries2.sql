@@ -83,3 +83,13 @@ JOIN SalesDB.Sales.Products AS p
 ON o.ProductID = p.ProductID
 JOIN SalesDB.Sales.Employees AS e
 ON o.SalesPersonID = e.EmployeeID;
+--Combine the data from employees and customers into one table
+SELECT
+	FirstName,
+	LastName
+FROM SalesDB.Sales.Customers
+UNION ALL
+SELECT
+	FirstName,
+	LastName
+FROM SalesDB.Sales.Employees;
