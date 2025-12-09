@@ -93,3 +93,9 @@ SELECT
 	FirstName,
 	LastName
 FROM SalesDB.Sales.Employees;
+SELECT
+	e.FirstName,
+	e.LastName
+FROM SalesDB.Sales.Employees AS e
+JOIN SalesDB.Sales.Customers AS c
+ON e.FirstName = c.FirstName AND COALESCE(e.LastName,'') = COALESCE(c.LastName,'');
