@@ -99,3 +99,23 @@ SELECT
 FROM SalesDB.Sales.Employees AS e
 JOIN SalesDB.Sales.Customers AS c
 ON e.FirstName = c.FirstName AND COALESCE(e.LastName,'') = COALESCE(c.LastName,'');
+--Show as list of customers' first names together with their coutries in one column
+SELECT
+*,
+CONCAT(FirstName,' ',Country) AS NameCountry,
+FirstName+ ' ' + Country AS NameCountry2
+FROM SalesDB.Sales.Customers
+
+-- Transform the customer's first names to lowercase
+SELECT
+	*,
+	LOWER(FirstName) FirstNameLower,
+	UPPER(LastName) LastNameUpper,
+	UPPER(LEFT(LOWER(FirstName),1))+SUBSTRING(FirstName,2,LEN(FirstName)) AS CapitalizedName
+FROM SalesDB.Sales.Customers
+
+--Checking for trailing and leading spaces
+SELECT
+FirstName
+FROM SalesDB.Sales.Customers
+WHERE LEN(FirstName) <> LEN(TRIM(FirstName))
