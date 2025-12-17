@@ -119,3 +119,11 @@ SELECT
 FirstName
 FROM SalesDB.Sales.Customers
 WHERE LEN(FirstName) <> LEN(TRIM(FirstName))
+--Show Creation Time using following format Day Wed Jan Q1 2025 12:34:56 PM
+SELECT
+	CreationTime,
+	FORMAT(CreationTime, 'dd/MMM/yyyy') FULLDATE,
+	'Day ' +FORMAT(CreationTime, 'ddd MMM ') + 'Q' 
+	+TRIM(STR(DATEPART(quarter, CreationTime)))
+	+FORMAT(CreationTime, ' yyyy HH:mm:ss tt') FULLDATE
+FROM SalesDB.Sales.Orders;
