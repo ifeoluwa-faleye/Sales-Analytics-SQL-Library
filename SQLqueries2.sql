@@ -127,3 +127,23 @@ SELECT
 	+TRIM(STR(DATEPART(quarter, CreationTime)))
 	+FORMAT(CreationTime, ' yyyy HH:mm:ss tt') FULLDATE
 FROM SalesDB.Sales.Orders;
+-- Find the average shipping duration in days for each month
+SELECT
+	DATENAME(month, OrderDate) OrderMonth,
+	AVG(DATEDIFF(day, OrderDate, ShipDate)) AvgShipDuration
+FROM SalesDB.Sales.Orders
+GROUP BY DATENAME(month, OrderDate)
+
+-- Find the number of days between each order and the previous order
+WITH DateTb AS
+(
+SELECT
+	OrderID,
+	OrderDate AS CurrentOrderDate,
+	LAG(OrderDate) OVER(ORDER BY OrderDate) AS PrevOrderDate
+FROM SalesDB.Sales.Orders)
+
+SELECT
+	*,
+	DATEDIFF(day, PrevOrderDate, CurrentOrderDate) AS DaysB2Orders
+FROM DateTb
