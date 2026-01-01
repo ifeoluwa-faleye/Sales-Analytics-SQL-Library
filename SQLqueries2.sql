@@ -153,3 +153,11 @@ SELECT
 	Score
 FROM Sales.Customers
 ORDER BY (CASE WHEN Score IS NULL THEN 1 ELSE 0 END), Score
+-- Show a list of all details of customers who have not placed any orders
+
+SELECT
+*
+FROM Sales.Customers AS c
+LEFT JOIN Sales.Orders AS o
+ON c.CustomerID = o.CustomerID
+WHERE o.CustomerID IS NULL
