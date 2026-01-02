@@ -190,3 +190,40 @@ SELECT
 	NULLIF(TRIM(Category), ''),
 	COALESCE(NULLIF(TRIM(Category), ''), 'n/a')
 FROM Orders
+/*
+Generate a report showing the total sales for each category:
+	- High: If the sales is higher than 50
+	- Medium: If the sales is between 20 and 50
+	- Low: If the sales is less than or equal to 20
+Sort the result from lowest to highest
+*/
+SELECT
+	SalesBucket,
+	SUM(Sales) AS TotalSales
+FROM
+(
+SELECT
+	OrderID,
+	Sales,
+	CASE 
+		WHEN Sales > 50 THEN 'High'
+		WHEN Sales > 20 AND Sales <= 50 THEN 'Medium'
+		ELSE 'Low'
+	END AS SalesBucket
+FROM SalesDB.Sales.Orders)t
+GROUP BY SalesBucket
+ORDER BY TotalSales
+
+
+SELECT
+	p.Category,
+	SUM(Sales) AS TotalSales,
+	CASE
+		WHEN SUM(Sales) > 200 THEN 'High'
+		ELSE 'Low'
+	END AS SalesBucket
+FROM SalesDB.Sales.Orders AS o
+LEFT JOIN SalesDB.Sales.Products AS p
+	ON o.ProductID = p.ProductID
+GROUP BY Category
+ORDER BY TotalSales
