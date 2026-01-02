@@ -227,3 +227,20 @@ LEFT JOIN SalesDB.Sales.Products AS p
 	ON o.ProductID = p.ProductID
 GROUP BY Category
 ORDER BY TotalSales
+/*
+Count the number of times each customer has made an order with sales greater than 30
+*/
+SELECT
+	OrderID,
+	CustomerID,
+	Sales,
+	CASE
+		WHEN Sales > 30 THEN 1
+		ELSE 0
+	END AS OrdersAbove,
+	SUM(CASE
+		WHEN Sales > 30 THEN 1
+		ELSE 0
+	END) OVER(PARTITION BY CustomerID) AS TotalOrdersAbove
+FROM SalesDB.Sales.Orders
+ORDER BY CustomerID
