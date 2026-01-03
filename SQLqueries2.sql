@@ -244,3 +244,43 @@ SELECT
 	END) OVER(PARTITION BY CustomerID) AS TotalOrdersAbove
 FROM SalesDB.Sales.Orders
 ORDER BY CustomerID
+-- Find the total sales accross all orders additionally, provide details such as order id & order date
+
+SELECT
+	OrderID,
+	OrderDate,
+	SUM(Sales) OVER() AS TotalSales
+FROM Sales.Orders
+
+-- Find the total sales for each product additionally, provide details such as order id & order date
+
+SELECT
+	ProductID,
+	OrderID,
+	OrderDate,
+	SUM(Sales) OVER() AS TotalSales,
+	SUM(Sales) OVER(PARTITION BY ProductID) AS ProductSales
+FROM Sales.Orders
+
+-- Find the total sales for each combination of product and order status additionally, provide details such as order id & order date
+
+SELECT
+	ProductID,
+	OrderID,
+	OrderDate,
+	OrderStatus,
+	Sales,
+	SUM(Sales) OVER() AS TotalSales,
+	SUM(Sales) OVER(PARTITION BY ProductID) AS ProductSales,
+	SUM(Sales) OVER(PARTITION BY ProductID, OrderStatus) AS ProductSalesByStatus
+FROM Sales.Orders
+
+-- Rank each order based on their sales from the highest to the lowest. Additionally, provide details such as order id & order date
+SELECT
+	OrderID,
+	OrderDate,
+	Sales,
+	ROW_NUMBER() OVER(ORDER BY Sales DESC) AS SalesRank1,
+	RANK() OVER(ORDER BY Sales DESC) AS SalesRank2,
+	DENSE_RANK() OVER(ORDER BY Sales DESC) AS SalesRank
+FROM Sales.Orders
