@@ -319,3 +319,16 @@ SELECT
 	OrderID,
 	COUNT(OrderID) OVER(PARTITION BY OrderID) AS Checks
 FROM Sales.OrdersArchive
+-- Find the total sales accross all orders
+-- Find the total sales for each products
+-- Additionally, provide details like order id, order date
+SELECT
+	OrderID,
+	OrderDate,
+	ProductID,
+	Sales,
+	SUM(Sales) OVER() AS TotalSales,
+	SUM(Sales) OVER(PARTITION BY ProductID) SalesByProduct,
+	ROUND(SUM(CAST(Sales AS FLOAT)) OVER(PARTITION BY ProductID) / SUM(Sales) OVER() * 100, 2) ProdPercTotal
+FROM Sales.Orders
+
