@@ -284,3 +284,38 @@ SELECT
 	RANK() OVER(ORDER BY Sales DESC) AS SalesRank2,
 	DENSE_RANK() OVER(ORDER BY Sales DESC) AS SalesRank
 FROM Sales.Orders
+-- Find the total number of orders
+-- Find the total number of orders for each customers
+-- Additionally, provide details like order id, order date
+SELECT
+	OrderID,
+	OrderDate,
+	CustomerID,
+	COUNT(OrderID) OVER() AS TotalOrders,
+	COUNT(OrderID) OVER(PARTITION BY CustomerID) OrdersByCustomers
+FROM Sales.Orders
+
+-- Find the total number of customers
+-- Find the total number of scores for the customers
+-- Find the total scores for the customers
+-- Additionally, provide customers details
+SELECT
+	FirstName,
+	LastName,
+	Score,
+	COUNT(CustomerID) OVER() AS TotalCustomers,
+	SUM(Score) OVER() AS TotalScores,
+	COUNT(Score) OVER() AS TotalNumberScores
+FROM Sales.Customers
+
+-- Check out whether table orders contains any duplucate rows
+SELECT
+	OrderID,
+	COUNT(OrderID) OVER(PARTITION BY OrderID) AS Checks
+FROM Sales.Orders
+
+-- Check out whether table orders contains any duplucate rows
+SELECT
+	OrderID,
+	COUNT(OrderID) OVER(PARTITION BY OrderID) AS Checks
+FROM Sales.OrdersArchive
