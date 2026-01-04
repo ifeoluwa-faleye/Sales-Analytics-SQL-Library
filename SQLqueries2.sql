@@ -331,4 +331,18 @@ SELECT
 	SUM(Sales) OVER(PARTITION BY ProductID) SalesByProduct,
 	ROUND(SUM(CAST(Sales AS FLOAT)) OVER(PARTITION BY ProductID) / SUM(Sales) OVER() * 100, 2) ProdPercTotal
 FROM Sales.Orders
+-- Find all orders where the sales are higher than the average sales accross all orders
+-- Additionally, provide details like order id, order date
+SELECT
+	OrderID,
+	OrderDate,
+	Sales,
+	AVG(Sales) OVER() AS AvgSales,
+	CASE 
+		WHEN Sales > AVG(Sales) OVER() THEN OrderID
+		ELSE NULL
+	END AS CheckSales
+FROM Sales.Orders
+
+
 
