@@ -343,6 +343,13 @@ SELECT
 		ELSE NULL
 	END AS CheckSales
 FROM Sales.Orders
+-- Calculate the moving average of sales for each products over time, including only the next order
 
+SELECT
+	ProductID,
+	Sales,
+	AVG(Sales) OVER(PARTITION BY ProductID ORDER BY OrderDate) AS ProductMA,
+	AVG(Sales) OVER(PARTITION BY ProductID ORDER BY OrderDate ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING) AS ProductMA1
+FROM Sales.Orders
 
 
