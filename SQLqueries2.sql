@@ -351,5 +351,13 @@ SELECT
 	AVG(Sales) OVER(PARTITION BY ProductID ORDER BY OrderDate) AS ProductMA,
 	AVG(Sales) OVER(PARTITION BY ProductID ORDER BY OrderDate ROWS BETWEEN CURRENT ROW AND 1 FOLLOWING) AS ProductMA1
 FROM Sales.Orders
-
+/*
+SELECT 
+	OrderID,
+	Sales,
+	ProductID,
+	AVG(Sales) OVER() AS avgsales,
+	AVG(Sales) OVER(PARTITION BY ProductID) AS avgsalesp
+FROM Sales.Orders;
+*/
 
