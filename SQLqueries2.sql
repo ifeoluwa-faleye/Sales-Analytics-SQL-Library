@@ -371,3 +371,14 @@ SELECT
 	ROW_NUMBER() OVER(PARTITION BY ProductID ORDER BY Sales DESC) AS PrdRank2
 FROM Sales.Orders)t
 WHERE PrdRank2 = 1
+-- Find the top lowest 2 customers based on their total sales
+SELECT
+	*
+FROM
+(
+SELECT
+	CustomerID,
+	Sales,
+	ROW_NUMBER() OVER(ORDER BY Sales) AS PrdRank2
+FROM Sales.Orders)t
+WHERE PrdRank2 <= 2
