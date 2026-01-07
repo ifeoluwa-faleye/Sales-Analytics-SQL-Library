@@ -360,4 +360,14 @@ SELECT
 	AVG(Sales) OVER(PARTITION BY ProductID) AS avgsalesp
 FROM Sales.Orders;
 */
-
+-- Find the top sales for each products
+SELECT
+	*
+FROM
+(
+SELECT
+	ProductID,
+	Sales,
+	ROW_NUMBER() OVER(PARTITION BY ProductID ORDER BY Sales DESC) AS PrdRank2
+FROM Sales.Orders)t
+WHERE PrdRank2 = 1
