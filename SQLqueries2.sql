@@ -394,3 +394,17 @@ SELECT
 FROM Sales.Orders
 GROUP BY CustomerID
 )t WHERE PrdRank2 <= 2
+/*
+-- Find the top lowest 2 customers based on their total sales
+SELECT
+	*
+FROM
+(
+SELECT
+	CustomerID,
+	SUM(Sales) TotalSales,
+	ROW_NUMBER() OVER(ORDER BY SUM(Sales)) AS PrdRank2
+FROM Sales.Orders
+GROUP BY CustomerID
+)t WHERE PrdRank2 <= 2
+*/
