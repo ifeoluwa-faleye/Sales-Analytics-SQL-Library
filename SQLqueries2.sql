@@ -394,5 +394,13 @@ SELECT
 FROM Sales.Orders
 GROUP BY CustomerID
 )t WHERE PrdRank2 <= 2
-/*
 
+-- Analyze the MoM performance by finding the percentage change in the sales between the current and previous month
+
+SELECT
+	MONTH(OrderDate) OrderMonth,
+	SUM(Sales) TotalSales,
+	LAG(SUM(Sales), 1) OVER(ORDER BY MONTH(OrderDate)) NextMonth,
+	FORMAT((SUM(CAST(Sales AS FLOAT))/LAG(SUM(Sales), 1) OVER(ORDER BY MONTH(OrderDate)) - 1), 'P') AS MoMgrowth
+FROM Sales.Orders
+GROUP BY MONTH(OrderDate)
