@@ -404,3 +404,18 @@ SELECT
 	FORMAT((SUM(CAST(Sales AS FLOAT))/LAG(SUM(Sales), 1) OVER(ORDER BY MONTH(OrderDate)) - 1), 'P') AS MoMgrowth
 FROM Sales.Orders
 GROUP BY MONTH(OrderDate)
+-- Analyze the MoM performance by finding the percentage change in the sales between the current and previous month
+SELECT
+	CustomerID,
+	AVG(DaysBtOrders) DaysbtOrderAvg
+FROM
+(
+SELECT
+	CustomerID,
+	OrderDate AS CurOrderDate,
+	LEAD(OrderDate, 1) OVER(PARTITION BY CustomerID ORDER BY OrderDate) AS NextOrderDate,
+	DATEDIFF(day, OrderDate, LEAD(OrderDate, 1) OVER(PARTITION BY CustomerID ORDER BY OrderDate)) AS DaysBtOrders
+FROM Sales.Orders
+)t
+GROUP BY CustomerID
+ORDER BY DaysbtOrderAvg
