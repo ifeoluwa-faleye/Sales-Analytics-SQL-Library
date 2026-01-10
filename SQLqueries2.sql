@@ -400,7 +400,7 @@ GROUP BY CustomerID
 SELECT
 	MONTH(OrderDate) OrderMonth,
 	SUM(Sales) TotalSales,
-	LAG(SUM(Sales), 1) OVER(ORDER BY MONTH(OrderDate)) NextMonth,
+	LAG(SUM(Sales), 1) OVER(ORDER BY MONTH(OrderDate)) PrevMonth,
 	FORMAT((SUM(CAST(Sales AS FLOAT))/LAG(SUM(Sales), 1) OVER(ORDER BY MONTH(OrderDate)) - 1), 'P') AS MoMgrowth
 FROM Sales.Orders
 GROUP BY MONTH(OrderDate)
