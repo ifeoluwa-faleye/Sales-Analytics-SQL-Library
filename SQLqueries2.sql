@@ -419,3 +419,8 @@ FROM Sales.Orders
 )t
 GROUP BY CustomerID
 ORDER BY DaysbtOrderAvg
+
+-- Find information about the metadata of our tabels 
+SELECT
+	*
+FROM INFORMATION_SCHEMA.COLUMNS
