@@ -424,3 +424,7 @@ ORDER BY DaysbtOrderAvg
 SELECT
 	*
 FROM INFORMATION_SCHEMA.COLUMNS
+-- Find information about the metadata of our tabels 
+SELECT
+	*
+FROM INFORMATION_SCHEMA.COLUMNS
