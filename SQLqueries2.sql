@@ -458,3 +458,17 @@ FROM
 WHERE
     num = prev_num
     AND num = next_num;
+/* Write your T-SQL query statement below */
+WITH session AS
+(
+SELECT
+    player_id,
+    event_date,
+    LEAD(event_date) OVER(PARTITION BY player_id ORDER BY event_date) AS event_date_new,
+    DATEDIFF(day, event_date, LEAD(event_date) OVER(PARTITION BY player_id ORDER BY event_date)) AS daysbetweengames
+FROM Activity)
+
+SELECT
+    ROUND((COUNT( DISTINCT player_id) * 1.0)/(SELECT COUNT(DISTINCT player_id) FROM Activity), 2)  AS fraction
+FROM session
+WHERE daysbetweengames = 1;
