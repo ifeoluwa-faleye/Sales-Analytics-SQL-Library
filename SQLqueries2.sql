@@ -467,6 +467,21 @@ SELECT
     LEAD(event_date) OVER(PARTITION BY player_id ORDER BY event_date) AS event_date_new,
     DATEDIFF(day, event_date, LEAD(event_date) OVER(PARTITION BY player_id ORDER BY event_date)) AS daysbetweengames
 FROM Activity)
+	/* Write your T-SQL query statement below */
+WITH cte AS (
+    SELECT
+        num,
+        LAG(num)  OVER (ORDER BY id) AS prev_num,
+        LEAD(num) OVER (ORDER BY id) AS next_num
+    FROM Logs
+)
+SELECT DISTINCT
+    num AS ConsecutiveNums
+FROM
+    cte
+WHERE
+    num = prev_num
+    AND num = next_num;
 
 SELECT
     ROUND((COUNT( DISTINCT player_id) * 1.0)/(SELECT COUNT(DISTINCT player_id) FROM Activity), 2)  AS fraction
