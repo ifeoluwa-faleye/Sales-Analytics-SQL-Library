@@ -487,3 +487,37 @@ SELECT
     ROUND((COUNT( DISTINCT player_id) * 1.0)/(SELECT COUNT(DISTINCT player_id) FROM Activity), 2)  AS fraction
 FROM session
 WHERE daysbetweengames = 1;
+
+
+/*
+STEP 1: Find the total sales per customer
+*/
+WITH CTE_Total_Sales AS
+(
+SELECT
+	CustomerID,
+	SUM(Sales) AS TotalSales
+FROM Sales.Orders
+GROUP BY CustomerID
+)
+--STEP 2: Find the last order date for each customer
+, CTE_Last_Order_Date AS
+(
+SELECT
+	CustomerID,
+	MAX(OrderDate) AS LOD
+FROM Sales.Orders
+GROUP BY CustomerID
+)
+--Main Query
+SELECT 
+	c.CustomerID,
+	c.FirstName,
+	c.LastName,
+	s.TotalSales,
+	l.LOD
+FROM Sales.Customers AS c
+LEFT JOIN CTE_Total_Sales AS s
+ON c.CustomerID = s.CustomerID
+LEFT JOIN CTE_Last_Order_Date AS l
+ON c.CustomerID = l.CustomerID
