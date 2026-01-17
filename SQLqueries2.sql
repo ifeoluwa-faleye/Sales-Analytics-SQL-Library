@@ -550,3 +550,19 @@ LEFT JOIN CTE_Customer_Rank AS r
 ON c.CustomerID = r.CustomerID
 LEFT JOIN CTE_Customer_Segment AS cs
 ON c.CustomerID = cs.CustomerID
+
+
+WITH First_Number AS
+(
+	SELECT 1 AS Number
+	UNION ALL
+	--Recurssion
+	SELECT
+		Number + 1
+	FROM First_Number
+	WHERE Number < 10
+)
+
+SELECT 
+	*
+FROM First_Number
