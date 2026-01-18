@@ -566,3 +566,18 @@ WITH First_Number AS
 SELECT 
 	*
 FROM First_Number
+WITH First_Number AS
+(
+	SELECT 1 AS Number
+	UNION ALL
+	--Recurssion
+	SELECT
+		Number + 1
+	FROM First_Number
+	WHERE Number < 10
+)
+
+SELECT 
+	*
+FROM First_Number
+
