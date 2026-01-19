@@ -581,3 +581,16 @@ SELECT
 	*
 FROM First_Number
 
+IF OBJECT_ID('VeiwName', 'V') IS NOT NULL
+DROP 'ViewName';
+GO
+CREATE VIEW 'ViewName'
+(
+	SELECT
+		COLUMN1,
+		COLUMN1,
+		COLUMN1,
+		COLUMNN
+	FROM TableName
+	WHERE CONDITIONS
+)
