@@ -584,7 +584,7 @@ FROM First_Number
 IF OBJECT_ID('VeiwName', 'V') IS NOT NULL
 DROP 'ViewName';
 GO
-CREATE VIEW 'ViewName'
+CREATE VIEW 'ViewName' AS
 (
 	SELECT
 		COLUMN1,
