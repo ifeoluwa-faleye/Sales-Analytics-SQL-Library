@@ -612,3 +612,14 @@ JOIN
     Employee m ON e.managerId = m.id
 WHERE 
     e.salary > m.salary;
+/* Write your T-SQL query statement below */
+SELECT
+email AS Email
+FROM
+(
+SELECT
+    email,
+    COUNT(email) AS EmailCount
+FROM Person
+GROUP BY email
+HAVING COUNT(email) >= 2)t
