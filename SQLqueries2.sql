@@ -623,3 +623,12 @@ SELECT
 FROM Person
 GROUP BY email
 HAVING COUNT(email) >= 2)t
+
+SELECT
+	e.emp_id,
+	e.emp_name,
+	e.manager_id,
+	m.emp_name AS manager_name
+FROM emp AS e
+JOIN emp AS m
+ON e.emp_id = m.emp_id
