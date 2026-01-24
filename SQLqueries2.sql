@@ -641,3 +641,9 @@ SELECT
 FROM emp AS e
 JOIN emp AS m
 ON e.emp_id = m.emp_id
+	
+-- Create a temp table to store all orders
+SELECT
+*
+INTO #Sales.OrdersNew
+FROM Sales.Orders
