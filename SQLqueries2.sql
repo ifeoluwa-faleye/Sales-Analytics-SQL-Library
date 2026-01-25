@@ -632,15 +632,6 @@ SELECT
 FROM emp AS e
 JOIN emp AS m
 ON e.emp_id = m.emp_id
-
-SELECT
-	e.emp_id,
-	e.emp_name,
-	e.manager_id,
-	m.emp_name AS manager_name
-FROM emp AS e
-JOIN emp AS m
-ON e.emp_id = m.emp_id
 	
 -- Create a temp table to store all orders
 SELECT
