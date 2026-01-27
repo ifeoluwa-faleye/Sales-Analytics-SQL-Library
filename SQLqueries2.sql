@@ -638,3 +638,7 @@ SELECT
 *
 INTO #Sales.OrdersNew
 FROM Sales.Orders
+%sql
+SELECT *
+FROM workspace.salesdb.fact_sales
+LIMIT 10
