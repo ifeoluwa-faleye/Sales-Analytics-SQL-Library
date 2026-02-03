@@ -642,3 +642,7 @@ FROM Sales.Orders
 SELECT *
 FROM workspace.salesdb.fact_sales
 LIMIT 10
+%sql
+SELECT *
+FROM workspace.salesdb.fact_sales
+LIMIT 
