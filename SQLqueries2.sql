@@ -651,3 +651,13 @@ SELECT
 	DISTINCT (YEAR(birth_date)) AS birth_year
 FROM patients
 ORDER BY YEAR(birth_date)
+--Show unique first names from the patients table which only occurs once in the list.
+SELECT
+	first_name
+FROM(
+SELECT
+	DISTINCT first_name AS first_name,
+    COUNT(first_name) AS first_name_count
+FROM patients
+GROUP BY first_name)t 
+WHERE first_name_count = 1
