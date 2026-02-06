@@ -18,3 +18,10 @@ FROM patients AS p
 JOIN admissions AS a
 ON p.patient_id = a.patient_id
 WHERE a.diagnosis = 'Dementia'
+/*Show the total amount of male patients and the total amount of female patients in the patients table.
+Display the two results in the same row.*/
+SELECT
+	(SELECT COUNT(patient_id) FROM patients WHERE gender = 'M') AS male_count,
+    COUNT(patient_id) AS female_count
+FROM patients
+WHERE gender = 'F'
