@@ -35,3 +35,16 @@ SELECT
 FROM patients
 WHERE allergies IN ('Penicillin', 'Morphine')
 ORDER BY allergies, first_name, last_name
+/*Show patient_id, diagnosis from admissions. 
+Find patients admitted multiple times for the same diagnosis.*/
+SELECT
+	DISTINCT patient_id,
+    diagnosis
+FROM
+(
+SELECT
+	patient_id,
+    diagnosis,
+    COUNT(diagnosis) OVER(PARTITION BY patient_id, diagnosis) AS diagnosis_count
+FROM admissions)t 
+WHERE diagnosis_count > 1
