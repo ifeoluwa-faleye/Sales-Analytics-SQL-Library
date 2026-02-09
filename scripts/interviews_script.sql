@@ -69,4 +69,13 @@ SELECT
     last_name,
     'Doctor'
 FROM doctors
-
+/*Show all allergies ordered by popularity. Remove NULL values from query.*/
+SELECT
+	p.allergies,
+  	COUNT(a.diagnosis) AS total_diagnosis
+FROM patients AS p 
+JOIN admissions AS a 
+ON p.patient_id = a.patient_id
+WHERE p.allergies IS NOT NULL
+GROUP BY p.allergies
+ORDER BY COUNT(diagnosis) DESC
