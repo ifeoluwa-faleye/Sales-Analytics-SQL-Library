@@ -123,3 +123,11 @@ SELECT
 	MAX(weight)-MIN(weight)
 FROM patients
 WHERE last_name = 'Maroni'
+/*Show all of the days of the month (1-31) and how many admission_dates occurred on that day. 
+Sort by the day with most admissions to least admissions.*/
+SELECT
+	DAY(admission_date),
+    COUnT(patient_id) AS number_of_admissions
+FROM admissions
+GROUP BY DAY(admission_date)
+ORDER BY COUnT(patient_id) DESC
