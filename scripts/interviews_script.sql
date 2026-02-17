@@ -148,3 +148,14 @@ SELECT
 FROM admissions
 WHere patient_id%2 = 1 AND attending_doctor_id IN(1, 5, 19)
 OR attending_doctor_id LIKE '%2%' AND LEN(patient_id) = 3;
+/*Show first_name, last_name, and the total number of admissions attended for each doctor.
+
+Every admission has been attended by a doctor.*/
+SELECT
+	d.first_name,
+    d.last_name,
+    COUNT(a.patient_id) AS admissions_total
+FROM doctors AS d
+JOIN admissions AS a
+ON d.doctor_id = a.attending_doctor_id
+GROUP BY d.first_name, d.last_name
