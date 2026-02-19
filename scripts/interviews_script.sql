@@ -169,3 +169,12 @@ FROM doctors AS d
 JOIN admissions AS a 
 ON d.doctor_id = a.attending_doctor_id
 GROUP BY attending_doctor_id;
+/*Display the total amount of patients for each province. Order by descending.*/
+SELECT
+	p.province_name,
+    COUNT(pa.patient_id) AS patient_count
+FROM province_names AS p 
+JOIN patients AS pa 
+ON p.province_id = pa.province_id
+GROUP BY p.province_name
+ORDER BY COUNT(pa.patient_id) DESC;
