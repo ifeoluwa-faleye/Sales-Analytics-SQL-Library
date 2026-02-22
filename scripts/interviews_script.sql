@@ -188,3 +188,11 @@ JOIN admissions AS a
 ON p.patient_id = a.patient_id
 JOIN doctors AS d 
 ON a.attending_doctor_id = d.doctor_id;
+/*display the first name, last name and number of duplicate patients based on their first name and last name.*/
+SELECT
+	first_name, 
+    last_name,
+    COUNT(patient_id) AS num_of_duplicate
+FROM patients
+GROUP BY first_name, last_name
+HAVING COUNT(patient_id) > 1;
