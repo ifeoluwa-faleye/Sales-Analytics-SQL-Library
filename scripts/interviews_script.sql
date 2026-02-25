@@ -224,3 +224,16 @@ FROM patients AS p
 LEFT JOIN admissions AS a
 ON a.patient_id = p.patient_id
 WHERE a.patient_id IS NULL;
+/*Display a single row with max_visits, min_visits, average_visits where the maximum, 
+minimum and average number of admissions per day is calculated. Average is rounded to 2 decimal places.*/
+SELECT
+	MAX(total_visits) AS max_visits,
+    MIN(total_visits) AS min_visits,
+    ROUND(AVG(total_visits),2) AS average_visits
+FROM
+(
+SELECT
+	admission_date,
+	COUNT(patient_id) total_visits
+FROM admissions
+GROUP BY admission_date)t
