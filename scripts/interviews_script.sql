@@ -343,3 +343,20 @@ JOIN admissions AS a
 ON p.patient_id = a.patient_id
 GROUP BY a.patient_id
 HAVING a.admission_date = min(a.admission_date);
+/*Each admission costs $50 for patients without insurance, and $10 for patients with insurance. 
+All patients with an even patient_id have insurance.
+
+Give each patient a 'Yes' if they have insurance, and a 'No' if they don't have insurance. 
+Add up the admission_total cost for each has_insurance group.*/
+
+SELECT
+	CASE 
+    	WHEN patient_id % 2 = 0 THEN 'Yes'
+        ELSE 'No'
+    END AS has_insurance,
+    CASE 
+    	WHEN patient_id % 2 = 0 THEN COUNT(patient_id) * 10
+        ELSE COUNT(patient_id) * 50
+    END AS cost_after_insurance
+FROM admissions
+GROUP BY has_insurance;
