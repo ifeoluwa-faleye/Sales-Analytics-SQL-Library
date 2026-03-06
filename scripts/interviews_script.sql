@@ -360,3 +360,25 @@ SELECT
     END AS cost_after_insurance
 FROM admissions
 GROUP BY has_insurance;
+/*Show the provinces that has more patients identified as 'M' than 'F'. Must only show full province_name*/
+WITH gender_tab as 
+(
+SELECT
+  	pr.province_name,
+	SUM(CASE
+    	WHEN pa.gender = 'M' THEN 1
+        ELSE 0
+    END) AS male_count,
+    SUM(CASE
+    	WHEN pa.gender = 'F' THEN 1
+        ELSE 0
+    END) AS female_count
+FROM patients AS pa
+JOIN province_names AS pr 
+on pa.province_id = pr.province_id
+GROUP BY pr.province_name)
+
+SELECT
+	province_name
+FROM gender_tab 
+WHERE male_count > female_count
