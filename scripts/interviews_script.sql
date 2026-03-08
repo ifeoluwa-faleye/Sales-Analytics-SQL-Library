@@ -399,3 +399,8 @@ AND MONTH(birth_date) IN (2, 5, 12)
 AND (weight >=60 and weight <=80)
 AND patient_id % 2 <> 0
 AND city = 'Kingston'
+/*Show the percent of patients that have 'M' as their gender. Round the answer to the nearest hundreth number and in percent form.*/
+
+SELECT
+	CONCAT(CAST(ROUND((SELECT COUNT(patient_id) from patients WHERE gender = 'M')/CAST(COUNT(patient_id) AS FLOAT) * 100, 2) AS VARCHAR(50)),'%') AS percent_of_male_patients
+FROM patients 
