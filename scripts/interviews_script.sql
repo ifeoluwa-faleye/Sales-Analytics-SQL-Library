@@ -404,3 +404,18 @@ AND city = 'Kingston'
 SELECT
 	CONCAT(CAST(ROUND((SELECT COUNT(patient_id) from patients WHERE gender = 'M')/CAST(COUNT(patient_id) AS FLOAT) * 100, 2) AS VARCHAR(50)),'%') AS percent_of_male_patients
 FROM patients 
+/*
+  For each day display the total amount of admissions on that day. Display the amount changed from the previous date.
+*/
+SELECT
+	admission_date,
+    total_admission,
+    (total_admission - pd_total_admissions) AS admission_count_change
+FROM
+(
+SELECT 
+  admission_date,
+  COUNT (patient_id) AS total_admission,
+  LAG(COUNT (patient_id)) OVER(ORDER BY admission_date) AS pd_total_admissions
+FROM admissions
+GROUP BY admission_date)t
