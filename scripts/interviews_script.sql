@@ -419,3 +419,15 @@ SELECT
   LAG(COUNT (patient_id)) OVER(ORDER BY admission_date) AS pd_total_admissions
 FROM admissions
 GROUP BY admission_date)t
+/*
+  Sort the province names in ascending order in such a way that the province 'Ontario' is always on top.
+*/
+SELECT
+	province_name
+FROM province_names
+WHERE province_name = 'Ontario'
+UNION ALL
+SELECT distinct
+	province_name
+FROM province_names
+WHERE province_name <> 'Ontario';
