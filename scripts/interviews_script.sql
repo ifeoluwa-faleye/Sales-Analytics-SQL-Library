@@ -443,3 +443,20 @@ SELECT distinct
 	province_name
 FROM province_names
 WHERE province_name <> 'Ontario';
+/*
+  We need a breakdown for the total amount of admissions each doctor has started each year. 
+  Show the doctor_id, doctor_full_name, specialty, year, total_admissions for that year.
+*/
+SELECT
+	a.attending_doctor_id,
+    d.first_name||' '||d.last_name AS doctor_name,
+    d.specialty,
+    YEAR(a.admission_date),
+    COUNT(a.patient_id) AS total_admissions
+FROM admissions AS a
+JOIN doctors AS d
+ON a.attending_doctor_id = d.doctor_id
+GROUP BY a.attending_doctor_id,
+    doctor_name,
+    d.specialty,
+    YEAR(a.admission_date)
