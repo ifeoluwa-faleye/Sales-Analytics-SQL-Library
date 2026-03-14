@@ -460,3 +460,27 @@ GROUP BY a.attending_doctor_id,
     doctor_name,
     d.specialty,
     YEAR(a.admission_date)
+/*
+  Show the employee's first_name and last_name, a "num_orders" column with a count of the orders taken, and a column called 
+  "Shipped" that displays "On Time" if the order shipped_date is less or equal to the required_date, "Late" if the order shipped late, 
+  "Not Shipped" if shipped_date is null.
+
+Order by employee last_name, then by first_name, and then descending by number of orders.
+*/
+
+SELECT
+	e.first_name,
+    e.last_name,
+    COUNT(o.order_id) AS num_orders,
+    CASE
+    	WHEN o.shipped_date <= o.required_date THEN 'On Time'
+        WHEN o.shipped_date > o.required_date THEN 'Late'
+        ELSE 'Not Shipped'
+    END AS Shipped
+FROM employees AS e
+JOIN orders AS o
+ON e.employee_id = o.employee_id
+GROUP BY e.first_name,
+    e.last_name,
+    Shipped
+ORDER BY e.last_name, e.first_name, num_orders DESC;
