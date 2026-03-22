@@ -557,3 +557,16 @@ JOIN suppliers as su
 ON su.supplier_id = p.supplier_id
 JOIN categories AS ca 
 ON p.category_id = ca.category_id;
+/*
+  Show the ProductName, CompanyName, CategoryName from the products, suppliers, and categories table
+*/
+
+SELECT
+	p.product_name,
+    su.company_name,
+    ca.category_name
+FROM products AS p
+JOIN suppliers as su
+ON su.supplier_id = p.supplier_id
+JOIN categories AS ca 
+ON p.category_id = ca.category_id;
