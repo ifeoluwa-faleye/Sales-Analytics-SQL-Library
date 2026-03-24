@@ -581,3 +581,14 @@ FROM categories As ca
 JOIN products AS p 
 ON ca.category_id = p.category_id
 GROUP BY ca.category_name;
+/*
+Show the category_name and the average product unit price for each category rounded to 2 decimal places.
+*/
+
+SELECT
+    ca.category_name,
+    ROUND(AVG(p.unit_price),2) AS average_unit_price
+FROM categories As ca 
+JOIN products AS p 
+ON ca.category_id = p.category_id
+GROUP BY ca.category_name;
