@@ -622,3 +622,10 @@ SELECT
     COUNT(order_id) AS no_of_orders
 FROM orders
 GROUP BY order_year, order_month
+/*
+Show the category_name and description from the categories table sorted by category_name.*/
+
+SELECT
+    category_name,
+    description
+FROM categories;
