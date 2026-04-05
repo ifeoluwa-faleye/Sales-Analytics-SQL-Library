@@ -632,3 +632,19 @@ SELECT
     COUNT(order_id) AS no_of_orders
 FROM orders
 GROUP BY order_year, order_month
+/* Write your T-SQL query statement below */
+SELECT
+    Department,
+    Employee,
+    Salary
+FROM
+(
+SELECT
+    d.name AS Department,
+    e.name AS Employee,
+    e.salary AS Salary,
+    RANK() OVER(PARTITION BY d.name ORDER BY e.salary DESC) AS drank
+FROM Department AS d
+JOIN Employee AS e
+ON d.id = e.departmentId) AS t
+WHERE drank = 1
